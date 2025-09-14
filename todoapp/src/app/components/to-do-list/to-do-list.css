@@ -1,0 +1,52 @@
+.container {
+  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  width: 400px;
+  padding-top: 5px;
+}
+
+.title {
+  padding-left: 40px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.item {
+  display: inline-block;
+  width: 300px;
+  margin-bottom: 10px;
+}
+
+.item_description {
+  padding: 10px 10px 10px 10px;
+  background-color: lightgray;
+  border-radius: 4px;
+}
+
+.delete_button {
+  margin-left: 5px;
+  padding: 10px 10px 10px 10px;
+}
+
+.input_section {
+  margin-left: 40px;
+  margin-bottom: 10px;
+}
+
+.text_edit {
+  padding: 10px 10px 10px 10px;
+  border-radius: 4px;
+}
+
+.add_button {
+  margin-left: 5px;
+  border-radius: 4px;
+  padding: 10px 10px 10px 10px;
+  background-color: blueviolet;
+  color: whitesmoke;
+}
+
+.footer {
+  height: 10px;
+}
