@@ -1,20 +1,20 @@
 <div class="container">
 <div class="title"><h1>Todo List</h1></div>
-<section id="task_list">
+<div id="task_list">
   <ul>
     @for (item of items; track item.id) {
       <li class="item">
-        <span class="item_description">{{ item.text }}</span><button type="button" class="button button--delete">Delete</button>
+        <span class="item_description">{{ item.text }}</span><button type="button" class="button button--delete" (click)="onDeleteItem(item.id)">Delete</button>
       </li>
     }
   </ul>
-</section>
-<section id="new_task">
+</div>
+<div id="new_task">
   <div class="input_section">
-    <input id="newItemDescription" #newItemDescription type="text" placeholder="Add your new todo" class="text_edit" (input)="onInputTextChange($event)">
-    <button id="addItemButton" #addItemButton class="button button--add button--disabled" disabled>Add task</button>
+    <input id="newItemDescription" #newItemText type="text" placeholder="Add your new todo" class="text_edit" (input)="onInputTextChange($event)">
+    <button id="addItemButton" #addItemButton class="button button--add" (click)="onAddItem()">Add task</button>
   </div>
-</section>
+</div>
 <div class="footer">
 </div>
 </div>
