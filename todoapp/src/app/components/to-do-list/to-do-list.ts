@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, viewChild } from '@angular/core';
+import { ToDoListItem } from '../to-do-list-item/to-do-list-item';
 
 type ToDoItem = {
   id: string,
@@ -7,7 +8,7 @@ type ToDoItem = {
 
 @Component({
   selector: 'app-to-do-list',
-  imports: [],
+  imports: [ToDoListItem],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css'
 })

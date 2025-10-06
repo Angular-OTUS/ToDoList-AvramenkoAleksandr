@@ -1,0 +1,28 @@
+.item {
+  display: inline-block;
+  width: 300px;
+  margin-bottom: 10px;
+}
+
+.item_description {
+  padding: 6px 6px 6px 6px;
+  background-color: lightgray;
+  border-radius: 4px;
+}
+
+.button {
+  border-radius: 4px;
+  margin-left: 5px;
+  padding: 10px 10px 10px 10px;
+  color: whitesmoke;
+  border-style: none;
+  font-weight: 700;
+}
+
+.button--disabled {
+  opacity: 0.5;
+}
+
+.button--delete {
+  background-color: red;
+}
