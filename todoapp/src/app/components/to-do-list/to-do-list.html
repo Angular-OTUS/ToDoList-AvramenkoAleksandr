@@ -9,7 +9,11 @@
 </div>
 <div id="new_task">
   <div class="input_section">
-    <input id="newItemDescription" #newItemText type="text" placeholder="Add your new todo" class="text_edit" (input)="onInputTextChange($event)">
+    <mat-form-field>
+    <mat-label>New to-do item text</mat-label>
+    <input matInput id="newItemDescription" #newItemText type="text" class="text_edit" (input)="onInputTextChange($event)">
+    </mat-form-field>
+
     <button id="addItemButton" #addItemButton class="button button--add" (click)="onAddItem()">Add task</button>
   </div>
 </div>

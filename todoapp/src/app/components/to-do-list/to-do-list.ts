@@ -1,5 +1,10 @@
 import { AfterViewInit, Component, ElementRef, viewChild } from '@angular/core';
 import { ToDoListItem } from '../to-do-list-item/to-do-list-item';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 type ToDoItem = {
   id: string,
@@ -8,7 +13,7 @@ type ToDoItem = {
 
 @Component({
   selector: 'app-to-do-list',
-  imports: [ToDoListItem],
+  imports: [ToDoListItem, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css'
 })
@@ -42,6 +47,7 @@ export class ToDoList implements AfterViewInit {
       this.items.push({ id: newItemId.toString(), text: inputField.value });
 
       inputField.value = '';
+      this.enableAddButton(false);
     }
   }
 
