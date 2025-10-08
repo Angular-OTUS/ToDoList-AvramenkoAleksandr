@@ -12,18 +12,6 @@ ul {
   list-style-type: none;
 }
 
-.item {
-  display: inline-block;
-  width: 300px;
-  margin-bottom: 10px;
-}
-
-.item_description {
-  padding: 6px 6px 6px 6px;
-  background-color: lightgray;
-  border-radius: 4px;
-}
-
 .button {
   border-radius: 4px;
   margin-left: 5px;
@@ -39,10 +27,6 @@ ul {
 
 .button--add {
   background-color: rgb(2, 140, 2);
-}
-
-.button--delete {
-  background-color: red;
 }
 
 .input_section {
