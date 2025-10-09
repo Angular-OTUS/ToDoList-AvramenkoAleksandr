@@ -41,3 +41,11 @@ ul {
 .footer {
   height: 10px;
 }
+
+.spinner-text {
+  margin-left: 40px;
+}
+
+.loading-items-spinner {
+  margin-left: 40px;
+}

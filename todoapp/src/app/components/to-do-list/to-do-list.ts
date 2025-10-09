@@ -1,8 +1,10 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
+  inject,
   OnInit,
   viewChild,
 } from '@angular/core';
@@ -12,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ToDoItem } from '../../model/to-do-item';
 
 @Component({
@@ -23,22 +26,33 @@ import { ToDoItem } from '../../model/to-do-item';
     FormsModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoList implements OnInit, AfterViewInit {
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
   readonly addButtonSignal =
     viewChild.required<ElementRef<HTMLButtonElement>>('addItemButton');
   readonly newItemDescriptionSignal =
     viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
 
-  items: ToDoItem[] = [];
+  items: ToDoItem[] = [
+    { id: '1', text: 'Умыться' },
+    { id: '2', text: 'Сделать зарядку' },
+    { id: '3', text: 'Почитать почту' },
+  ];
   isLoading: boolean = true;
 
   ngOnInit(): void {
-    setTimeout(() => (this.isLoading = true), 500);
+    setTimeout(() => {
+      this.isLoading = false;
+      console.log('Loading items done, isLoading=', this.isLoading);
+      this.cdr.markForCheck();
+    }, 500);
   }
 
   ngAfterViewInit(): void {

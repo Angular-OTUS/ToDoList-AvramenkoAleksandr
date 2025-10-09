@@ -1,16 +1,21 @@
 <div class="container">
   <div class="title"><h1>Todo List</h1></div>
-  <div id="task_list">
-    <ul>
-      @for (item of items; track item.id) {
-        <app-to-do-list-item
-          [id]="item.id"
-          [text]="item.text"
-          (deleteItem)="onDeleteItem($event)"
-        />
-      }
-    </ul>
-  </div>
+  @if (isLoading) {
+    <div class="spinner-text">Loading todo items...</div>
+    <mat-spinner class="loading-items-spinner" />
+  } @else {
+    <div id="task_list">
+      <ul>
+        @for (item of items; track item.id) {
+          <app-to-do-list-item
+            [id]="item.id"
+            [text]="item.text"
+            (deleteItem)="onDeleteItem($event)"
+          />
+        }
+      </ul>
+    </div>
+  }
   <div id="new_task">
     <div class="input_section">
       <mat-form-field>
