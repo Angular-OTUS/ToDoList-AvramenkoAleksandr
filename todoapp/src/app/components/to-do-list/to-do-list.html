@@ -3,7 +3,7 @@
 <div id="task_list">
   <ul>
     @for (item of items; track item.id) {
-      <app-to-do-list-item [id]="item.id" [text]="item.text" (deleteItem)="onDeleteItem($event)"></app-to-do-list-item>
+      <app-to-do-list-item [id]="item.id" [text]="item.text" (deleteItem)="onDeleteItem($event)" />
     }
   </ul>
 </div>
@@ -11,10 +11,10 @@
   <div class="input_section">
     <mat-form-field>
     <mat-label>New to-do item text</mat-label>
-    <input matInput id="newItemDescription" #newItemText type="text" class="text_edit" (input)="onInputTextChange($event)">
+    <input #newItemText class="text_edit" id="newItemDescription" matInput type="tex" (input)="onInputTextChange($event)">
     </mat-form-field>
 
-    <button id="addItemButton" #addItemButton class="button button--add" (click)="onAddItem()">Add task</button>
+    <button #addItemButton class="button button--add" id="addItemButton" type="button" (click)="onAddItem()">Add task</button>
   </div>
 </div>
 <div class="footer">
