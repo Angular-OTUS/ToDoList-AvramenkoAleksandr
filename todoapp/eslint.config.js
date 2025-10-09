@@ -104,6 +104,9 @@ module.exports = tseslint.config(
       // Security
       'no-eval': 'error',
       'no-implied-eval': 'error',
+
+      // Dangling comma
+      "comma-dangle": [2, "always-multiline"]
     },
   },
   {

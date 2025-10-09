@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
   imports: [],
   templateUrl: './to-do-list-item.html',
   styleUrl: './to-do-list-item.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoListItem {
   readonly id = input.required<string>();

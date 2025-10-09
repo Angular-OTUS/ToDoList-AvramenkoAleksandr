@@ -12,7 +12,7 @@ import { ToDoItem } from '../../model/to-do-item';
   imports: [ToDoListItem, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoList implements AfterViewInit {
   readonly addButtonSignal = viewChild.required<ElementRef<HTMLButtonElement>>('addItemButton');

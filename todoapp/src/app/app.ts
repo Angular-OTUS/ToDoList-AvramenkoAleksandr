@@ -7,7 +7,7 @@ import { ToDoList } from './components/to-do-list/to-do-list';
   imports: [RouterOutlet, ToDoList],
   templateUrl: './app.html',
   styleUrl: './app.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
   protected readonly title = signal('todoapp');
