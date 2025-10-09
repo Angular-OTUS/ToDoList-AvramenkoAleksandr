@@ -1,22 +1,40 @@
 <div class="container">
-<div class="title"><h1>Todo List</h1></div>
-<div id="task_list">
-  <ul>
-    @for (item of items; track item.id) {
-      <app-to-do-list-item [id]="item.id" [text]="item.text" (deleteItem)="onDeleteItem($event)" />
-    }
-  </ul>
-</div>
-<div id="new_task">
-  <div class="input_section">
-    <mat-form-field>
-    <mat-label>New to-do item text</mat-label>
-    <input #newItemText class="text_edit" id="newItemDescription" matInput type="tex" (input)="onInputTextChange($event)">
-    </mat-form-field>
-
-    <button #addItemButton class="button button--add" id="addItemButton" type="button" (click)="onAddItem()">Add task</button>
+  <div class="title"><h1>Todo List</h1></div>
+  <div id="task_list">
+    <ul>
+      @for (item of items; track item.id) {
+        <app-to-do-list-item
+          [id]="item.id"
+          [text]="item.text"
+          (deleteItem)="onDeleteItem($event)"
+        />
+      }
+    </ul>
   </div>
-</div>
-<div class="footer">
-</div>
+  <div id="new_task">
+    <div class="input_section">
+      <mat-form-field>
+        <mat-label>New to-do item text</mat-label>
+        <input
+          #newItemText
+          class="text_edit"
+          id="newItemDescription"
+          matInput
+          type="tex"
+          (input)="onInputTextChange($event)"
+        />
+      </mat-form-field>
+
+      <button
+        #addItemButton
+        class="button button--add"
+        id="addItemButton"
+        type="button"
+        (click)="onAddItem()"
+      >
+        Add task
+      </button>
+    </div>
+  </div>
+  <div class="footer"></div>
 </div>

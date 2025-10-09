@@ -1,4 +1,4 @@
 export interface ToDoItem {
-  id: string,
-  text: string
+  id: string;
+  text: string;
 }

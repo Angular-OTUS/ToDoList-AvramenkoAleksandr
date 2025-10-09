@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  viewChild,
+} from '@angular/core';
 import { ToDoListItem } from '../to-do-list-item/to-do-list-item';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,19 +15,32 @@ import { ToDoItem } from '../../model/to-do-item';
 
 @Component({
   selector: 'app-to-do-list',
-  imports: [ToDoListItem, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule],
+  imports: [
+    ToDoListItem,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoList implements AfterViewInit {
-  readonly addButtonSignal = viewChild.required<ElementRef<HTMLButtonElement>>('addItemButton');
-  readonly newItemDescriptionSignal = viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
+  readonly addButtonSignal =
+    viewChild.required<ElementRef<HTMLButtonElement>>('addItemButton');
+  readonly newItemDescriptionSignal =
+    viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
 
   items: ToDoItem[] = [];
+  isLoading: boolean = true;
 
   ngAfterViewInit(): void {
-    console.log("ngAfterViewInit, newItemDescriptionSignal()=", this.newItemDescriptionSignal());
+    console.log(
+      'ngAfterViewInit, newItemDescriptionSignal()=',
+      this.newItemDescriptionSignal(),
+    );
 
     this.enableAddButton(false);
   }
@@ -29,18 +48,19 @@ export class ToDoList implements AfterViewInit {
   onInputTextChange(event: Event): void {
     const inputField = event.target as HTMLInputElement;
 
-    if (inputField.id === "newItemDescription") {
+    if (inputField.id === 'newItemDescription') {
       this.enableAddButton(inputField.value?.length > 0);
     }
   }
 
   onAddItem(): void {
-    console.log("Adding an item");
+    console.log('Adding an item');
     const inputField = this.newItemDescriptionSignal().nativeElement;
     if (inputField.value?.length ?? 0 > 0) {
       const currentIdList = this.items.map((val) => Number(val.id));
-      console.log("currentIdList: ", currentIdList);
-      const newItemId = currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1;
+      console.log('currentIdList: ', currentIdList);
+      const newItemId =
+        currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1;
       this.items.push({ id: newItemId.toString(), text: inputField.value });
 
       inputField.value = '';
@@ -49,18 +69,18 @@ export class ToDoList implements AfterViewInit {
   }
 
   onDeleteItem(itemId: string): void {
-    console.log("Deleting item with id=", itemId);
+    console.log('Deleting item with id=', itemId);
     this.items = this.items.filter((value) => value.id !== itemId);
   }
 
   private enableAddButton(enable: boolean): void {
     const addButtonElement = this.addButtonSignal().nativeElement;
     if (enable) {
-      console.log("Enable add button");
+      console.log('Enable add button');
       addButtonElement.disabled = false;
       addButtonElement.classList.remove('button--disabled');
     } else {
-      console.log("Disable add button");
+      console.log('Disable add button');
       addButtonElement.disabled = true;
       addButtonElement.classList.add('button--disabled');
     }
