@@ -12,21 +12,21 @@ ul {
   list-style-type: none;
 }
 
-.item {
-  display: inline-block;
-  width: 300px;
-  margin-bottom: 10px;
-}
-
-.item_description {
-  padding: 10px 10px 10px 10px;
-  background-color: lightgray;
+.button {
   border-radius: 4px;
-}
-
-.delete_button {
   margin-left: 5px;
   padding: 10px 10px 10px 10px;
+  color: whitesmoke;
+  border-style: none;
+  font-weight: 700;
+}
+
+.button--disabled {
+  opacity: 0.5;
+}
+
+.button--add {
+  background-color: rgb(2, 140, 2);
 }
 
 .input_section {
@@ -35,17 +35,9 @@ ul {
 }
 
 .text_edit {
-  padding: 10px 10px 10px 10px;
   border-radius: 4px;
 }
 
-.add_button {
-  margin-left: 5px;
-  border-radius: 4px;
-  padding: 10px 10px 10px 10px;
-  background-color: blueviolet;
-  color: whitesmoke;
-}
 
 .footer {
   height: 10px;

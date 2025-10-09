@@ -1,11 +1,71 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, viewChild } from '@angular/core';
+import { ToDoListItem } from '../to-do-list-item/to-do-list-item';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+
+type ToDoItem = {
+  id: string,
+  text: string
+}
 
 @Component({
   selector: 'app-to-do-list',
-  imports: [],
+  imports: [ToDoListItem, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css'
 })
-export class ToDoList {
+export class ToDoList implements AfterViewInit {
+  addButtonSignal = viewChild.required<ElementRef<HTMLButtonElement>>('addItemButton');
+  newItemDescriptionSignal = viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
 
+  items: ToDoItem[] = [];
+
+  ngAfterViewInit(): void {
+    console.log("ngAfterViewInit, newItemDescriptionSignal()=", this.newItemDescriptionSignal());
+
+    this.enableAddButton(false);
+  }
+
+  onInputTextChange(event: Event) {
+    const inputField = event.target as HTMLInputElement;
+
+    if (inputField.id === "newItemDescription") {
+      this.enableAddButton(inputField.value?.length > 0);
+    }
+  }
+
+  onAddItem() {
+    console.log("Adding an item");
+    const inputField = this.newItemDescriptionSignal().nativeElement;
+    if (inputField.value?.length ?? 0 > 0) {
+      const currentIdList = this.items.map((val, idx) => Number(val.id));
+      console.log("currentIdList: ", currentIdList);
+      const newItemId = currentIdList.length == 0 ? 1 : Math.max(...currentIdList) + 1;
+      this.items.push({ id: newItemId.toString(), text: inputField.value });
+
+      inputField.value = '';
+      this.enableAddButton(false);
+    }
+  }
+
+  onDeleteItem(itemId: string) {
+    console.log("Deleting item with id=", itemId);
+    this.items = this.items.filter((value, index) => value.id !== itemId);
+  }
+
+  private enableAddButton(enable: boolean) {
+    const addButtonElement = this.addButtonSignal().nativeElement;
+    if (enable) {
+      console.log("Enable add button");
+      addButtonElement.disabled = false;
+      addButtonElement.classList.remove('button--disabled');
+    } else {
+      console.log("Disable add button");
+      addButtonElement.disabled = true;
+      addButtonElement.classList.add('button--disabled');
+    }
+  }
 }
