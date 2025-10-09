@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnInit,
   viewChild,
 } from '@angular/core';
 import { ToDoListItem } from '../to-do-list-item/to-do-list-item';
@@ -27,7 +28,7 @@ import { ToDoItem } from '../../model/to-do-item';
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToDoList implements AfterViewInit {
+export class ToDoList implements OnInit, AfterViewInit {
   readonly addButtonSignal =
     viewChild.required<ElementRef<HTMLButtonElement>>('addItemButton');
   readonly newItemDescriptionSignal =
@@ -35,6 +36,10 @@ export class ToDoList implements AfterViewInit {
 
   items: ToDoItem[] = [];
   isLoading: boolean = true;
+
+  ngOnInit(): void {
+    setTimeout(() => (this.isLoading = true), 500);
+  }
 
   ngAfterViewInit(): void {
     console.log(
