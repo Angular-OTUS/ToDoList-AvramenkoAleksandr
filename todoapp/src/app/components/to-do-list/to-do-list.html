@@ -2,7 +2,7 @@
   <div class="title"><h1>Todo List</h1></div>
   @if (isLoading) {
     <div class="spinner-text">Loading todo items...</div>
-    <mat-spinner class="loading-items-spinner" />
+    <mat-spinner class="loading-items-spinner" diameter="40" />
   } @else {
     <div id="task_list">
       <ul>
@@ -25,20 +25,18 @@
           class="text_edit"
           id="newItemDescription"
           matInput
-          type="tex"
-          (input)="onInputTextChange($event)"
+          type="text"
         />
       </mat-form-field>
 
-      <button
+      <app-button
         #addItemButton
-        class="button button--add"
         id="addItemButton"
-        type="button"
-        (click)="onAddItem()"
-      >
-        Add task
-      </button>
+        title="Add task"
+        type="add"
+        [isEnabled]="isAddButtonEnabled()"
+        (clicked)="onAddItem()"
+      />
     </div>
   </div>
   <div class="footer"></div>

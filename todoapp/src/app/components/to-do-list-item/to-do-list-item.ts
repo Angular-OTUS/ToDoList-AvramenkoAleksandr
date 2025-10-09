@@ -4,10 +4,11 @@ import {
   input,
   output,
 } from '@angular/core';
+import { Button } from '../button/button';
 
 @Component({
   selector: 'app-to-do-list-item',
-  imports: [],
+  imports: [Button],
   templateUrl: './to-do-list-item.html',
   styleUrl: './to-do-list-item.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

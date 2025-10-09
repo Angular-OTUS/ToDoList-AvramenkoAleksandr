@@ -12,23 +12,6 @@ ul {
   list-style-type: none;
 }
 
-.button {
-  border-radius: 4px;
-  margin-left: 5px;
-  padding: 10px 10px 10px 10px;
-  color: whitesmoke;
-  border-style: none;
-  font-weight: 700;
-}
-
-.button--disabled {
-  opacity: 0.5;
-}
-
-.button--add {
-  background-color: rgb(2, 140, 2);
-}
-
 .input_section {
   margin-left: 40px;
   margin-bottom: 10px;
