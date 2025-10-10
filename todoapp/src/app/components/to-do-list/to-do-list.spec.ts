@@ -8,9 +8,8 @@ describe('ToDoList', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ToDoList]
-    })
-    .compileComponents();
+      imports: [ToDoList],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ToDoList);
     component = fixture.componentInstance;

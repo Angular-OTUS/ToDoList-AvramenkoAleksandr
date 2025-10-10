@@ -1,3 +1,4 @@
 <li class="item">
-  <span class="item_description">{{ id() }}. {{ text() }}</span><button type="button" class="button button--delete" (click)="onDeleteItem()">Delete</button>
+  <span class="item_description">{{ id() }}. {{ text() }}</span
+  ><app-button title="Delete" type="delete" (clicked)="onDeleteItem()" />
 </li>

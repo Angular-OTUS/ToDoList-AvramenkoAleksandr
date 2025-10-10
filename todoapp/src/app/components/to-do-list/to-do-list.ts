@@ -1,71 +1,88 @@
-import { AfterViewInit, Component, ElementRef, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  viewChild,
+} from '@angular/core';
 import { ToDoListItem } from '../to-do-list-item/to-do-list-item';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-
-type ToDoItem = {
-  id: string,
-  text: string
-}
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ToDoItem } from '../../model/to-do-item';
+import { Button } from '../button/button';
 
 @Component({
   selector: 'app-to-do-list',
-  imports: [ToDoListItem, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule],
+  imports: [
+    ToDoListItem,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    Button,
+  ],
   templateUrl: './to-do-list.html',
-  styleUrl: './to-do-list.css'
+  styleUrl: './to-do-list.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToDoList implements AfterViewInit {
-  addButtonSignal = viewChild.required<ElementRef<HTMLButtonElement>>('addItemButton');
-  newItemDescriptionSignal = viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
+export class ToDoList implements OnInit, AfterViewInit {
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-  items: ToDoItem[] = [];
+  readonly newItemDescriptionSignal =
+    viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
+
+  items: ToDoItem[] = [
+    { id: '1', text: 'Умыться' },
+    { id: '2', text: 'Сделать зарядку' },
+    { id: '3', text: 'Почитать почту' },
+  ];
+  isLoading: boolean = true;
+
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.isLoading = false;
+      console.log('Loading items done, isLoading=', this.isLoading);
+      this.cdr.markForCheck();
+    }, 500);
+  }
 
   ngAfterViewInit(): void {
-    console.log("ngAfterViewInit, newItemDescriptionSignal()=", this.newItemDescriptionSignal());
-
-    this.enableAddButton(false);
+    console.log(
+      'ngAfterViewInit, newItemDescriptionSignal()=',
+      this.newItemDescriptionSignal(),
+    );
   }
 
-  onInputTextChange(event: Event) {
-    const inputField = event.target as HTMLInputElement;
-
-    if (inputField.id === "newItemDescription") {
-      this.enableAddButton(inputField.value?.length > 0);
-    }
-  }
-
-  onAddItem() {
-    console.log("Adding an item");
+  onAddItem(): void {
+    console.log('Adding an item');
     const inputField = this.newItemDescriptionSignal().nativeElement;
     if (inputField.value?.length ?? 0 > 0) {
-      const currentIdList = this.items.map((val, idx) => Number(val.id));
-      console.log("currentIdList: ", currentIdList);
-      const newItemId = currentIdList.length == 0 ? 1 : Math.max(...currentIdList) + 1;
+      const currentIdList = this.items.map((val) => Number(val.id));
+      console.log('currentIdList: ', currentIdList);
+      const newItemId =
+        currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1;
       this.items.push({ id: newItemId.toString(), text: inputField.value });
 
       inputField.value = '';
-      this.enableAddButton(false);
     }
   }
 
-  onDeleteItem(itemId: string) {
-    console.log("Deleting item with id=", itemId);
-    this.items = this.items.filter((value, index) => value.id !== itemId);
+  onDeleteItem(itemId: string): void {
+    console.log('Deleting item with id=', itemId);
+    this.items = this.items.filter((value) => value.id !== itemId);
   }
 
-  private enableAddButton(enable: boolean) {
-    const addButtonElement = this.addButtonSignal().nativeElement;
-    if (enable) {
-      console.log("Enable add button");
-      addButtonElement.disabled = false;
-      addButtonElement.classList.remove('button--disabled');
-    } else {
-      console.log("Disable add button");
-      addButtonElement.disabled = true;
-      addButtonElement.classList.add('button--disabled');
-    }
+  isAddButtonEnabled(): boolean {
+    const inputField = this.newItemDescriptionSignal().nativeElement;
+    return inputField.value?.length > 0;
   }
 }

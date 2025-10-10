@@ -1,10 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 mat-form-field {
-  --mat-form-field-container-text-line-height: 3.0;
+  --mat-form-field-container-text-line-height: 3;
   --mat-form-field-filled-with-label-container-padding-top: 7px;
   --mat-form-field-filled-with-label-container-padding-bottom: 7px;
 }
