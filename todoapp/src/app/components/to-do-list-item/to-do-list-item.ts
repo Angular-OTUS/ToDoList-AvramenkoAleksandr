@@ -5,10 +5,11 @@ import {
   output,
 } from '@angular/core';
 import { Button } from '../button/button';
+import { TooltipDirective } from "../../directives/tooltip-directive";
 
 @Component({
   selector: 'app-to-do-list-item',
-  imports: [Button],
+  imports: [Button, TooltipDirective],
   templateUrl: './to-do-list-item.html',
   styleUrl: './to-do-list-item.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

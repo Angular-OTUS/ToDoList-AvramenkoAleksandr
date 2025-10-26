@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ToDoItem } from '../../model/to-do-item';
 import { Button } from '../button/button';
+import { TooltipDirective } from "../../directives/tooltip-directive";
 
 @Component({
   selector: 'app-to-do-list',
@@ -29,7 +30,8 @@ import { Button } from '../button/button';
     MatIconModule,
     MatProgressSpinnerModule,
     Button,
-  ],
+    TooltipDirective,
+],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,13 +39,15 @@ import { Button } from '../button/button';
 export class ToDoList implements OnInit, AfterViewInit {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-  readonly newItemDescriptionSignal =
+  readonly newItemTextSignal =
     viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
+  readonly newItemDescriptionSignal =
+    viewChild.required<ElementRef<HTMLTextAreaElement>>('newItemDescription');
 
   items: ToDoItem[] = [
-    { id: '1', text: 'Умыться' },
-    { id: '2', text: 'Сделать зарядку' },
-    { id: '3', text: 'Почитать почту' },
+    { id: '1', text: 'Умыться', description: 'Надо умываться по утрам и вечерам' },
+    { id: '2', text: 'Сделать зарядку', description: 'Полезно для здоровья' },
+    { id: '3', text: 'Почитать почту', description: 'Там мржет быть что-то важное' },
   ];
   isLoading: boolean = true;
 
@@ -57,22 +61,28 @@ export class ToDoList implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     console.log(
-      'ngAfterViewInit, newItemDescriptionSignal()=',
-      this.newItemDescriptionSignal(),
+      'ngAfterViewInit, newItemTextSignal()=',
+      this.newItemTextSignal(),
     );
   }
 
   onAddItem(): void {
     console.log('Adding an item');
-    const inputField = this.newItemDescriptionSignal().nativeElement;
+    const inputField = this.newItemTextSignal().nativeElement;
     if (inputField.value?.length ?? 0 > 0) {
       const currentIdList = this.items.map((val) => Number(val.id));
       console.log('currentIdList: ', currentIdList);
       const newItemId =
         currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1;
-      this.items.push({ id: newItemId.toString(), text: inputField.value });
+      const descriptionField = this.newItemDescriptionSignal().nativeElement;
+      this.items.push({
+        id: newItemId.toString(),
+        text: inputField.value ,
+        description: descriptionField.value,
+      });
 
       inputField.value = '';
+      descriptionField.value = '';
     }
   }
 
@@ -82,7 +92,7 @@ export class ToDoList implements OnInit, AfterViewInit {
   }
 
   isAddButtonEnabled(): boolean {
-    const inputField = this.newItemDescriptionSignal().nativeElement;
+    const inputField = this.newItemTextSignal().nativeElement;
     return inputField.value?.length > 0;
   }
 }

@@ -1,7 +1,22 @@
 .container {
   box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
-  width: 400px;
+  width: 800px;
   padding-top: 5px;
+}
+
+.flex_container {
+  display: flex;
+  border: 1px;
+  border-color: black;
+  border-style: solid;
+}
+
+.left_column {
+  flex: 1;
+}
+
+.right_column {
+  flex: 5;
 }
 
 .title {
@@ -15,10 +30,14 @@ ul {
 .input_section {
   margin-left: 40px;
   margin-bottom: 10px;
+  border: 1px;
+  border-color: blue;
+  border-style: solid;
 }
 
 .text_edit {
   border-radius: 4px;
+  width: 500px;
 }
 
 .footer {
