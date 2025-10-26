@@ -41,6 +41,7 @@ module.exports = tseslint.config(
       "@angular-eslint/prefer-output-readonly": "warn",
       "@angular-eslint/prefer-signals": "warn",
       "@angular-eslint/prefer-standalone": "warn",
+      "@angular-eslint/prefer-inject": "warn",
 
       // TypeScript best practices
       "@typescript-eslint/array-type": ["warn"],
