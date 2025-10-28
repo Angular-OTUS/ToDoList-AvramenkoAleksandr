@@ -9,6 +9,12 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 mat-form-field {
   --mat-form-field-container-text-line-height: 3;
   --mat-form-field-filled-with-label-container-padding-top: 7px;

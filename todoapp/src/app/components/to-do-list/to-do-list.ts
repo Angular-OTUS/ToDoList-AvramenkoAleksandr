@@ -43,11 +43,13 @@ export class ToDoList implements OnInit, AfterViewInit {
     viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
   readonly newItemDescriptionSignal =
     viewChild.required<ElementRef<HTMLTextAreaElement>>('newItemDescription');
+  readonly currentItemDescriptionSignal =
+    viewChild.required<ElementRef<HTMLTextAreaElement>>('currentItemDescription');
 
   items: ToDoItem[] = [
-    { id: '1', text: 'Умыться', description: 'Надо умываться по утрам и вечерам' },
-    { id: '2', text: 'Сделать зарядку', description: 'Полезно для здоровья' },
-    { id: '3', text: 'Почитать почту', description: 'Там мржет быть что-то важное' },
+    { id: '1', text: 'Умыться', description: 'Надо, надо умываться по утрам и вечерам!', selected: false },
+    { id: '2', text: 'Сделать зарядку', description: 'Полезно для здоровья', selected: false },
+    { id: '3', text: 'Почитать почту', description: 'Там может быть что-то важное', selected: false },
   ];
   isLoading: boolean = true;
 
@@ -79,11 +81,25 @@ export class ToDoList implements OnInit, AfterViewInit {
         id: newItemId.toString(),
         text: inputField.value ,
         description: descriptionField.value,
+        selected: true,
       });
 
       inputField.value = '';
       descriptionField.value = '';
+      this.onSelectItem(newItemId.toString());
     }
+  }
+
+  onSelectItem(selectedItemId: string): void {
+    const itemDescriptionTextArea = this.currentItemDescriptionSignal().nativeElement;
+    this.items.forEach((item) => {
+      if (item.id === selectedItemId) {
+        item.selected = true;
+        itemDescriptionTextArea.value = item.description;
+      } else {
+        item.selected = false;
+      }
+    });
   }
 
   onDeleteItem(itemId: string): void {

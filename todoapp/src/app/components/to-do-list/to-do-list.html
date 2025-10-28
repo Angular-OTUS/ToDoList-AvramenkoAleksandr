@@ -1,75 +1,72 @@
-<div class="container">
-  <div class="title"><h1>Todo List</h1></div>
-  @if (isLoading) {
-    <div class="spinner-text">Loading todo items...</div>
-    <mat-spinner class="loading-items-spinner" diameter="40" />
-  } @else {
-    <div class="flex_container">
-      <div class="left_column">
-        <div id="task_list">
-          <ul>
-            @for (item of items; track item.id) {
-              <app-to-do-list-item
-                [id]="item.id"
-                [text]="item.text"
-                (deleteItem)="onDeleteItem($event)"
-              />
-            }
-          </ul>
-        </div>
-      </div>
-      <div class="right_column">
-        <mat-form-field>
-        <mat-label>Description</mat-label>
-        <textarea
-          #currentItemDescription
-          class="text_edit"
-          id="currentItemDescription"
-          matInput
-          placeholder="Selected item description"
-          readonly
-        ></textarea>
-      </mat-form-field>
-      </div>
-    </div>
-  }
-  <div id="new_task">
-    <div class="input_section">
-      <div>
-        <mat-form-field>
-          <mat-label>New to-do item text</mat-label>
-          <input
-            #newItemText
-            class="text_edit"
-            id="newItemText"
-            matInput
-            type="text"
-          />
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <mat-label>New Item Description</mat-label>
-          <textarea
-            #newItemDescription
-            class="text_edit"
-            id="newItemDescription"
-            matInput
-            placeholder="Enter a detailed description"
-          ></textarea>
-        </mat-form-field>
-      </div>
+<div class="todo-app">
+        <h1>TODO Application</h1>
 
-      <app-button
-        #addItemButton
-        appTooltip="Add a new item"
-        id="addItemButton"
-        title="Add my super task"
-        type="add"
-        [isEnabled]="isAddButtonEnabled()"
-        (clicked)="onAddItem()"
-      />
-    </div>
+        <div class="main-content">
+            <!-- Todo List Section -->
+            <div class="todo-list-section">
+                <h2>Todo Items</h2>
+                @if (isLoading) {
+                  <div class="spinner-text">Loading todo items...</div>
+                  <mat-spinner class="loading-items-spinner" diameter="40" />
+                } @else {
+                  <ul class="todo-list" id="todoList">
+                    @for (item of items; track item.id) {
+                      <app-to-do-list-item
+                        [id]="item.id"
+                        [text]="item.text"
+                        [(isSelected)]="item.selected"
+                        (itemDeleted)="onDeleteItem($event)"
+                        (itemSelected)="onSelectItem($event)"
+                      />
+                    }
+                  </ul>
+                }
+            </div>
+
+            <!-- Description Section -->
+            <div class="description-section">
+                <h2>Description</h2>
+                <textarea
+                  #currentItemDescription
+                  class="description-textarea"
+                  id="todoDescription"
+                  matInput
+                  placeholder="Select a todo item to view its description"
+                  readonly>
+                </textarea>
+            </div>
+        </div>
+
+        <!-- Add New Todo Section -->
+        <div class="add-todo-section">
+            <h2>Add New Todo</h2>
+            <div class="input-group">
+              <input
+                #newItemText
+                class="todo-input"
+                id="newItemText"
+                matInput
+                placeholder="Enter a todo text"
+                type="text"
+              />
+            </div>
+            <div class="input-group">
+              <textarea
+                #newItemDescription
+                class="todo-textarea"
+                id="newItemDescription"
+                matInput
+                placeholder="Enter a todo description"
+              ></textarea>
+            </div>
+            <app-button
+              #addItemButton
+              appTooltip="Add a new item"
+              id="addItemButton"
+              title="Add new todo item"
+              type="add"
+              [isEnabled]="isAddButtonEnabled()"
+              (clicked)="onAddItem()"
+            />
   </div>
-  <div class="footer"></div>
 </div>
