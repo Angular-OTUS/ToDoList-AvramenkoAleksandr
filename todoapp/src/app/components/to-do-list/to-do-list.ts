@@ -46,10 +46,12 @@ export class ToDoList implements OnInit, AfterViewInit {
   readonly currentItemDescriptionSignal =
     viewChild.required<ElementRef<HTMLTextAreaElement>>('currentItemDescription');
 
+  selectedItemId: string | null | undefined = null;
+
   items: ToDoItem[] = [
-    { id: '1', text: 'Умыться', description: 'Надо, надо умываться по утрам и вечерам!', selected: false },
-    { id: '2', text: 'Сделать зарядку', description: 'Полезно для здоровья', selected: false },
-    { id: '3', text: 'Почитать почту', description: 'Там может быть что-то важное', selected: false },
+    { id: '1', text: 'Умыться', description: 'Надо, надо умываться по утрам и вечерам!' },
+    { id: '2', text: 'Сделать зарядку', description: 'Полезно для здоровья' },
+    { id: '3', text: 'Почитать почту', description: 'Там может быть что-то важное' },
   ];
   isLoading: boolean = true;
 
@@ -80,8 +82,7 @@ export class ToDoList implements OnInit, AfterViewInit {
       this.items.push({
         id: newItemId.toString(),
         text: inputField.value ,
-        description: descriptionField.value,
-        selected: true,
+        description: descriptionField.value
       });
 
       inputField.value = '';
@@ -92,14 +93,22 @@ export class ToDoList implements OnInit, AfterViewInit {
 
   onSelectItem(selectedItemId: string): void {
     const itemDescriptionTextArea = this.currentItemDescriptionSignal().nativeElement;
-    this.items.forEach((item) => {
-      if (item.id === selectedItemId) {
-        item.selected = true;
-        itemDescriptionTextArea.value = item.description;
+    const currentItem = this.items.find((item) => item.id === selectedItemId);
+    if (currentItem) {
+      if (this.selectedItemId !== selectedItemId) {
+        // another item is being selected - set it as current
+        this.selectedItemId = selectedItemId;
+        itemDescriptionTextArea.value = currentItem.description;
       } else {
-        item.selected = false;
+        // the same item was clicked - just unselect it
+        this.selectedItemId = null;
+        itemDescriptionTextArea.value = '';
       }
-    });
+
+    } else {
+      console.error('Item with id=', selectedItemId, ' not found');
+    }
+
   }
 
   onDeleteItem(itemId: string): void {

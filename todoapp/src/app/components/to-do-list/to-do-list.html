@@ -12,9 +12,10 @@
                   <ul class="todo-list" id="todoList">
                     @for (item of items; track item.id) {
                       <app-to-do-list-item
+                        appTooltip="{{item.description}}"
                         [id]="item.id"
+                        [isSelected]="item.id === selectedItemId"
                         [text]="item.text"
-                        [(isSelected)]="item.selected"
                         (itemDeleted)="onDeleteItem($event)"
                         (itemSelected)="onSelectItem($event)"
                       />

@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  model,
   output,
 } from '@angular/core';
 import { Button } from '../button/button';
@@ -18,12 +17,11 @@ import { TooltipDirective } from "../../directives/tooltip-directive";
 export class ToDoListItem {
   readonly id = input.required<string>();
   readonly text = input.required<string>();
+  readonly isSelected = input<boolean>(false);
   readonly itemDeleted = output<string>();
   readonly itemSelected = output<string>();
-  readonly isSelected = model<boolean>(false);
 
   onSelectItem(selectedItemId: string): void {
-    this.isSelected.set(true);
     this.itemSelected.emit(selectedItemId);
   }
 

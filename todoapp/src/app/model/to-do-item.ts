@@ -1,6 +1,5 @@
 export interface ToDoItem {
   id: string;
   text: string;
-  description: string,
-  selected: boolean
+  description: string
 }
