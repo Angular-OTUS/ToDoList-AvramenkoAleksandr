@@ -1,11 +1,30 @@
-.item {
-  display: inline-block;
-  width: 300px;
-  margin-bottom: 10px;
+.todo-item {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.item_description {
-  padding: 6px 6px 6px 6px;
-  background-color: lightgray;
-  border-radius: 4px;
+.todo-item:hover {
+    background: #e9ecef;
+    border-color: #3498db;
+    transform: translateY(-1px);
+}
+
+.todo-item.selected {
+    background: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+.todo-text {
+    flex: 1;
+    font-weight: 500;
+    padding: 6px 6px 6px 6px;
 }

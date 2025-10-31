@@ -9,8 +9,83 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 mat-form-field {
   --mat-form-field-container-text-line-height: 3;
   --mat-form-field-filled-with-label-container-padding-top: 7px;
   --mat-form-field-filled-with-label-container-padding-bottom: 7px;
+}
+
+.custom-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  white-space: nowrap;
+  z-index: 10000;
+  pointer-events: none;
+  animation: tooltip-fade-in 0.2s ease-in-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  max-width: 300px;
+  word-wrap: break-word;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.custom-tooltip::after {
+  content: '';
+  position: absolute;
+  border: 6px solid transparent;
+}
+
+/* Top position arrow */
+.tooltip-top::after {
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Bottom position arrow */
+.tooltip-bottom::after {
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Left position arrow */
+.tooltip-left::after {
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Right position arrow */
+.tooltip-right::after {
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right-color: rgba(0, 0, 0, 0.9);
+}
+
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
