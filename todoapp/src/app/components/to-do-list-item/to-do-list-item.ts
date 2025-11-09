@@ -6,7 +6,7 @@ import {
   output,
 } from '@angular/core';
 import { Button } from '../button/button';
-import { TooltipDirective } from "../../directives/tooltip-directive";
+import { TooltipDirective } from '../../directives/tooltip-directive';
 
 @Component({
   selector: 'app-to-do-list-item',
@@ -21,7 +21,9 @@ export class ToDoListItem {
   readonly isSelected = input<boolean>(false);
   readonly itemDeleted = output<string>();
   readonly itemSelected = output<string>();
-  readonly itemClass = computed(() => this.isSelected() ? 'todo-item selected' : 'todo-item');
+  readonly itemClass = computed(() =>
+    this.isSelected() ? 'todo-item selected' : 'todo-item',
+  );
 
   onSelectItem(selectedItemId: string): void {
     this.itemSelected.emit(selectedItemId);

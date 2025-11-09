@@ -18,7 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ToDoItem } from '../../model/to-do-item';
 import { Button } from '../button/button';
-import { TooltipDirective } from "../../directives/tooltip-directive";
+import { TooltipDirective } from '../../directives/tooltip-directive';
 import { ToastService } from '../../services/toast-service';
 
 @Component({
@@ -33,7 +33,7 @@ import { ToastService } from '../../services/toast-service';
     MatProgressSpinnerModule,
     Button,
     TooltipDirective,
-],
+  ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,8 +47,9 @@ export class ToDoList implements OnInit, AfterViewInit {
     viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
   readonly newItemDescriptionSignal =
     viewChild.required<ElementRef<HTMLTextAreaElement>>('newItemDescription');
-  readonly currentItemDescriptionSignal =
-    viewChild.required<ElementRef<HTMLTextAreaElement>>('currentItemDescription');
+  readonly currentItemDescriptionSignal = viewChild.required<
+    ElementRef<HTMLTextAreaElement>
+  >('currentItemDescription');
 
   selectedItemId: string | null | undefined = null;
 
@@ -56,9 +57,17 @@ export class ToDoList implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     const items: ToDoItem[] = [
-      { id: '1', text: 'Умыться', description: 'Надо, надо умываться по утрам и вечерам!' },
+      {
+        id: '1',
+        text: 'Умыться',
+        description: 'Надо, надо умываться по утрам и вечерам!',
+      },
       { id: '2', text: 'Сделать зарядку', description: 'Полезно для здоровья' },
-      { id: '3', text: 'Почитать почту', description: 'Там может быть что-то важное' },
+      {
+        id: '3',
+        text: 'Почитать почту',
+        description: 'Там может быть что-то важное',
+      },
     ];
     this.dataService.addAllTodoItems(items);
 
@@ -80,7 +89,9 @@ export class ToDoList implements OnInit, AfterViewInit {
     console.log('Adding an item');
     const inputField = this.newItemTextSignal().nativeElement;
     if (inputField.value?.length ?? 0 > 0) {
-      const currentIdList = this.dataService.getAllToDoItems().map((val) => Number(val.id));
+      const currentIdList = this.dataService
+        .getAllToDoItems()
+        .map((val) => Number(val.id));
       console.log('currentIdList: ', currentIdList);
       const newItemId =
         currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1;
@@ -89,7 +100,7 @@ export class ToDoList implements OnInit, AfterViewInit {
       this.dataService.addNewTodoItem({
         id: newItemId.toString(),
         text: itemText,
-        description: descriptionField.value
+        description: descriptionField.value,
       });
 
       inputField.value = '';
@@ -105,8 +116,11 @@ export class ToDoList implements OnInit, AfterViewInit {
   }
 
   onSelectItem(selectedItemId: string): void {
-    const itemDescriptionTextArea = this.currentItemDescriptionSignal().nativeElement;
-    const currentItem = this.dataService.getAllToDoItems().find((item) => item.id === selectedItemId);
+    const itemDescriptionTextArea =
+      this.currentItemDescriptionSignal().nativeElement;
+    const currentItem = this.dataService
+      .getAllToDoItems()
+      .find((item) => item.id === selectedItemId);
     if (currentItem) {
       if (this.selectedItemId !== selectedItemId) {
         // another item is being selected - set it as current
@@ -117,7 +131,6 @@ export class ToDoList implements OnInit, AfterViewInit {
         this.selectedItemId = null;
         itemDescriptionTextArea.value = '';
       }
-
     } else {
       console.error('Item with id=', selectedItemId, ' not found');
     }

@@ -1,6 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Toast, ToastPosition, ToastService } from '../../services/toast-service';
+import {
+  Toast,
+  ToastPosition,
+  ToastService,
+} from '../../services/toast-service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -20,7 +31,7 @@ export class ToastComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.position = this.toastService.getPosition();
 
-    this.subscription = this.toastService.getToasts().subscribe(toasts => {
+    this.subscription = this.toastService.getToasts().subscribe((toasts) => {
       console.log('Toasts received');
       this.toasts = toasts;
       this.cdr.markForCheck();

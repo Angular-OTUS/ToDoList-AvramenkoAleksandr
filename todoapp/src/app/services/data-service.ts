@@ -20,6 +20,8 @@ export class DataService {
   }
 
   removeToDoItem(itemId: string): void {
-    this.toDoItemList = this.toDoItemList.filter((value) => value.id !== itemId);
+    this.toDoItemList = this.toDoItemList.filter(
+      (value) => value.id !== itemId,
+    );
   }
 }

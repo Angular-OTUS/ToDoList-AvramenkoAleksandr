@@ -1,5 +1,5 @@
 import { inject, Injectable, TemplateRef } from '@angular/core';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Toast {
@@ -11,11 +11,17 @@ export interface Toast {
   dismissible?: boolean;
 }
 
-export type ToastPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center';
+export type ToastPosition =
+  | 'top-right'
+  | 'top-left'
+  | 'bottom-right'
+  | 'bottom-left'
+  | 'top-center'
+  | 'bottom-center';
 
 export interface ToastMessage {
-  messageText: string,
-  caption: string,
+  messageText: string;
+  caption: string;
 }
 
 @Injectable({
@@ -39,7 +45,11 @@ export class ToastService {
     return this.position;
   }
 
-  showToast(message: string, type: Toast['type'] = 'info', duration = 3000): void {
+  showToast(
+    message: string,
+    type: Toast['type'] = 'info',
+    duration = 3000,
+  ): void {
     const toast: Toast = {
       id: this.nextId++,
       type,
@@ -75,7 +85,11 @@ export class ToastService {
     this.showToast(message, 'info', duration);
   }
 
-  showTemplate(template: TemplateRef<any>, type: Toast['type'] = 'info', duration = 5000): void {
+  showTemplate(
+    template: TemplateRef<any>,
+    type: Toast['type'] = 'info',
+    duration = 5000,
+  ): void {
     const toast: Toast = {
       id: this.nextId++,
       type,
@@ -95,7 +109,7 @@ export class ToastService {
   }
 
   remove(id: number): void {
-    this.toasts = this.toasts.filter(toast => toast.id !== id);
+    this.toasts = this.toasts.filter((toast) => toast.id !== id);
     this.toastsSubject.next([...this.toasts]);
   }
 

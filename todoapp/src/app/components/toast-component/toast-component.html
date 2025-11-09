@@ -2,24 +2,24 @@
 <div class="toast-container" [class]="getPositionClass()">
   @for (toast of toasts; track toast.id) {
     <div
-    class="toast"
-    [class]="getToastClass(toast)"
-    [style.cursor]="toast.dismissible ? 'pointer' : 'default'"
-    (click)="toast.dismissible && removeToast(toast.id)"
+      class="toast"
+      [class]="getToastClass(toast)"
+      [style.cursor]="toast.dismissible ? 'pointer' : 'default'"
+      (click)="toast.dismissible && removeToast(toast.id)"
     >
       <div class="toast__content">
         <div class="toast__icon">
           @switch (toast.type) {
-            @case ('success') {
+            @case ("success") {
               <span>✓</span>
             }
-            @case ('error') {
+            @case ("error") {
               <span>✕</span>
             }
-            @case ('warning') {
+            @case ("warning") {
               <span>⚠</span>
             }
-            @case ('info') {
+            @case ("info") {
               <span>ℹ</span>
             }
           }
@@ -36,21 +36,20 @@
 
         @if (toast.dismissible) {
           <button
-          class="toast__close"
-          (click)="$event.stopPropagation(); removeToast(toast.id)"
-          aria-label="Close"
+            class="toast__close"
+            (click)="$event.stopPropagation(); removeToast(toast.id)"
+            aria-label="Close"
           >
-          ×
+            ×
           </button>
         }
-
       </div>
-     @if (toast.duration && toast.duration > 0) {
-      <div
-      class="toast__progress"
-      [style.animation-duration]="getProgressAnimationDuration(toast)"
-    ></div>
-     }
-  </div>
+      @if (toast.duration && toast.duration > 0) {
+        <div
+          class="toast__progress"
+          [style.animation-duration]="getProgressAnimationDuration(toast)"
+        ></div>
+      }
+    </div>
   }
 </div>
