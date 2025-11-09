@@ -4,12 +4,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   ElementRef,
   inject,
   OnInit,
+  signal,
   viewChild,
 } from '@angular/core';
-import { ToDoListItem } from '../to-do-list-item/to-do-list-item';
+import { EditInfo, ToDoListItem } from '../to-do-list-item/to-do-list-item';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -55,18 +57,27 @@ export class ToDoList implements OnInit, AfterViewInit {
 
   isLoading: boolean = true;
 
+  allItems = this.dataService.getAllToDoItems();
+
   ngOnInit(): void {
     const items: ToDoItem[] = [
       {
         id: '1',
         text: 'Умыться',
         description: 'Надо, надо умываться по утрам и вечерам!',
+        isEditing: false,
       },
-      { id: '2', text: 'Сделать зарядку', description: 'Полезно для здоровья' },
+      {
+        id: '2',
+        text: 'Сделать зарядку',
+        description: 'Полезно для здоровья',
+        isEditing: false,
+      },
       {
         id: '3',
         text: 'Почитать почту',
         description: 'Там может быть что-то важное',
+        isEditing: false,
       },
     ];
     this.dataService.addAllTodoItems(items);
@@ -90,7 +101,7 @@ export class ToDoList implements OnInit, AfterViewInit {
     const inputField = this.newItemTextSignal().nativeElement;
     if (inputField.value?.length ?? 0 > 0) {
       const currentIdList = this.dataService
-        .getAllToDoItems()
+        .getAllToDoItems()()
         .map((val) => Number(val.id));
       console.log('currentIdList: ', currentIdList);
       const newItemId =
@@ -101,6 +112,7 @@ export class ToDoList implements OnInit, AfterViewInit {
         id: newItemId.toString(),
         text: itemText,
         description: descriptionField.value,
+        isEditing: false,
       });
 
       inputField.value = '';
@@ -111,15 +123,27 @@ export class ToDoList implements OnInit, AfterViewInit {
     }
   }
 
-  allItems(): ToDoItem[] {
-    return this.dataService.getAllToDoItems();
+  onStartEditing(itemId: string): void {
+    console.log('onStartEditing: ', itemId);
+    this.dataService.startItemEditing(itemId, true);
+  }
+
+  onItemEdited(editInfo: EditInfo): void {
+    if (editInfo.action === 'save') {
+      this.dataService.updateItem(
+        editInfo.itemId,
+        editInfo.isEditing,
+        editInfo.newText,
+      );
+    }
+    this.dataService.startItemEditing(editInfo.itemId, false);
   }
 
   onSelectItem(selectedItemId: string): void {
     const itemDescriptionTextArea =
       this.currentItemDescriptionSignal().nativeElement;
     const currentItem = this.dataService
-      .getAllToDoItems()
+      .getAllToDoItems()()
       .find((item) => item.id === selectedItemId);
     if (currentItem) {
       if (this.selectedItemId !== selectedItemId) {

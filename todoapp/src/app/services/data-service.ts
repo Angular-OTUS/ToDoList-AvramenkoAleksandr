@@ -1,27 +1,50 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal, signal } from '@angular/core';
 import { ToDoItem } from '../model/to-do-item';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  private toDoItemList: ToDoItem[] = [];
+  private readonly toDoItemList = signal<ToDoItem[]>([]);
 
   addNewTodoItem(item: ToDoItem): void {
-    this.toDoItemList.push(item);
+    this.toDoItemList.update((currentItems) => [...currentItems, item]);
   }
 
   addAllTodoItems(itemList: ToDoItem[]): void {
-    this.toDoItemList = this.toDoItemList.concat(itemList);
+    this.toDoItemList.update((currentItems) => currentItems.concat(itemList));
   }
 
-  getAllToDoItems(): ToDoItem[] {
-    return this.toDoItemList;
+  getAllToDoItems(): Signal<ToDoItem[]> {
+    return this.toDoItemList.asReadonly();
   }
 
   removeToDoItem(itemId: string): void {
-    this.toDoItemList = this.toDoItemList.filter(
-      (value) => value.id !== itemId,
+    this.toDoItemList.update((currentItems) =>
+      currentItems.filter((value) => value.id !== itemId),
+    );
+  }
+
+  startItemEditing(itemId: string, isEditing: boolean): void {
+    this.toDoItemList.update((currentItems) =>
+      currentItems.map((item) => {
+        return {
+          ...item,
+          isEditing: item.id === itemId ? isEditing : item.isEditing,
+        };
+      }),
+    );
+  }
+
+  updateItem(itemId: string, isEditing: boolean, newText: string): void {
+    this.toDoItemList.update((currentItems) =>
+      currentItems.map((item) => {
+        return {
+          ...item,
+          isEditing: item.id === itemId ? isEditing : item.isEditing,
+          text: item.id === itemId ? newText : item.text,
+        };
+      }),
     );
   }
 }
