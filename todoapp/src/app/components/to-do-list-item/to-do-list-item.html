@@ -1,4 +1,4 @@
-<li [classList]="getClasses()" (click)="onSelectItem(id())">
+<li [classList]="this.itemClass()" (click)="onSelectItem(id())">
   <span class="todo-text">{{ id() }}. {{ text() }}</span
   ><app-button appTooltip="Delete the item" title="Delete" type="delete" (clicked)="onDeleteItem()" />
 </li>

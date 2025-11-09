@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   input,
   output,
 } from '@angular/core';
@@ -20,6 +21,7 @@ export class ToDoListItem {
   readonly isSelected = input<boolean>(false);
   readonly itemDeleted = output<string>();
   readonly itemSelected = output<string>();
+  readonly itemClass = computed(() => this.isSelected() ? 'todo-item selected' : 'todo-item');
 
   onSelectItem(selectedItemId: string): void {
     this.itemSelected.emit(selectedItemId);
