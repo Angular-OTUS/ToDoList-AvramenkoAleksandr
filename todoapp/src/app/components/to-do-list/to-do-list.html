@@ -10,7 +10,7 @@
                   <mat-spinner class="loading-items-spinner" diameter="40" />
                 } @else {
                   <ul class="todo-list" id="todoList">
-                    @for (item of items; track item.id) {
+                    @for (item of allItems(); track item.id) {
                       <app-to-do-list-item
                         appTooltip="{{item.description}}"
                         [id]="item.id"

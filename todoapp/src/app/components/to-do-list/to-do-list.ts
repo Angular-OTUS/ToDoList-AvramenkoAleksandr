@@ -1,3 +1,4 @@
+import { DataService } from './../../services/data-service';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -18,6 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ToDoItem } from '../../model/to-do-item';
 import { Button } from '../button/button';
 import { TooltipDirective } from "../../directives/tooltip-directive";
+import { ToastService } from '../../services/toast-service';
 
 @Component({
   selector: 'app-to-do-list',
@@ -38,6 +40,8 @@ import { TooltipDirective } from "../../directives/tooltip-directive";
 })
 export class ToDoList implements OnInit, AfterViewInit {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private toastService: ToastService = inject(ToastService);
+  private dataService: DataService = inject(DataService);
 
   readonly newItemTextSignal =
     viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
@@ -48,14 +52,16 @@ export class ToDoList implements OnInit, AfterViewInit {
 
   selectedItemId: string | null | undefined = null;
 
-  items: ToDoItem[] = [
-    { id: '1', text: 'Умыться', description: 'Надо, надо умываться по утрам и вечерам!' },
-    { id: '2', text: 'Сделать зарядку', description: 'Полезно для здоровья' },
-    { id: '3', text: 'Почитать почту', description: 'Там может быть что-то важное' },
-  ];
   isLoading: boolean = true;
 
   ngOnInit(): void {
+    const items: ToDoItem[] = [
+      { id: '1', text: 'Умыться', description: 'Надо, надо умываться по утрам и вечерам!' },
+      { id: '2', text: 'Сделать зарядку', description: 'Полезно для здоровья' },
+      { id: '3', text: 'Почитать почту', description: 'Там может быть что-то важное' },
+    ];
+    this.dataService.addAllTodoItems(items);
+
     setTimeout(() => {
       this.isLoading = false;
       console.log('Loading items done, isLoading=', this.isLoading);
@@ -74,26 +80,33 @@ export class ToDoList implements OnInit, AfterViewInit {
     console.log('Adding an item');
     const inputField = this.newItemTextSignal().nativeElement;
     if (inputField.value?.length ?? 0 > 0) {
-      const currentIdList = this.items.map((val) => Number(val.id));
+      const currentIdList = this.dataService.getAllToDoItems().map((val) => Number(val.id));
       console.log('currentIdList: ', currentIdList);
       const newItemId =
         currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1;
       const descriptionField = this.newItemDescriptionSignal().nativeElement;
-      this.items.push({
+      const itemText = inputField.value;
+      this.dataService.addNewTodoItem({
         id: newItemId.toString(),
-        text: inputField.value ,
+        text: itemText,
         description: descriptionField.value
       });
 
       inputField.value = '';
       descriptionField.value = '';
       this.onSelectItem(newItemId.toString());
+
+      this.toastService.showToast('Todo item was added', 'success');
     }
+  }
+
+  allItems(): ToDoItem[] {
+    return this.dataService.getAllToDoItems();
   }
 
   onSelectItem(selectedItemId: string): void {
     const itemDescriptionTextArea = this.currentItemDescriptionSignal().nativeElement;
-    const currentItem = this.items.find((item) => item.id === selectedItemId);
+    const currentItem = this.dataService.getAllToDoItems().find((item) => item.id === selectedItemId);
     if (currentItem) {
       if (this.selectedItemId !== selectedItemId) {
         // another item is being selected - set it as current
@@ -108,12 +121,13 @@ export class ToDoList implements OnInit, AfterViewInit {
     } else {
       console.error('Item with id=', selectedItemId, ' not found');
     }
-
   }
 
   onDeleteItem(itemId: string): void {
     console.log('Deleting item with id=', itemId);
-    this.items = this.items.filter((value) => value.id !== itemId);
+    this.dataService.removeToDoItem(itemId);
+
+    this.toastService.showToast('Todo item was removed', 'info');
   }
 
   isAddButtonEnabled(): boolean {
