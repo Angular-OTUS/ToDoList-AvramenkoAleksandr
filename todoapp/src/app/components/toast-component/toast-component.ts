@@ -3,8 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
-  OnDestroy,
   OnInit,
+  Signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -12,7 +12,7 @@ import {
   ToastPosition,
   ToastService,
 } from '../../services/toast-service';
-import { Subscription } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-toast-component',
@@ -21,25 +21,16 @@ import { Subscription } from 'rxjs';
   styleUrl: './toast-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToastComponent implements OnInit, OnDestroy {
+export class ToastComponent implements OnInit {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private toastService: ToastService = inject(ToastService);
-  toasts: Toast[] = [];
+  toasts: Signal<Toast[]> = toSignal(this.toastService.getToasts(), {
+    initialValue: [],
+  });
   position: ToastPosition = 'top-right';
-  private subscription!: Subscription;
 
   ngOnInit(): void {
     this.position = this.toastService.getPosition();
-
-    this.subscription = this.toastService.getToasts().subscribe((toasts) => {
-      console.log('Toasts received');
-      this.toasts = toasts;
-      this.cdr.markForCheck();
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
   }
 
   removeToast(id: number): void {

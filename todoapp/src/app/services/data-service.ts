@@ -12,7 +12,7 @@ export class DataService {
   }
 
   addAllTodoItems(itemList: ToDoItem[]): void {
-    this.toDoItemList.update((currentItems) => currentItems.concat(itemList));
+    this.toDoItemList.update((currentItems) => [...currentItems, ...itemList]);
   }
 
   getAllToDoItems(): Signal<ToDoItem[]> {

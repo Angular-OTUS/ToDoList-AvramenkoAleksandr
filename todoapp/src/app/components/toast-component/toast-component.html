@@ -1,6 +1,6 @@
 <!-- toast.component.html -->
 <div class="toast-container" [class]="getPositionClass()">
-  @for (toast of toasts; track toast.id) {
+  @for (toast of toasts(); track toast.id) {
     <div
       class="toast"
       [class]="getToastClass(toast)"
@@ -26,12 +26,11 @@
         </div>
 
         <div class="toast__message">
-          <ng-container *ngIf="toast.template; else messageTemplate">
+          @if (toast.template) {
             <ng-container *ngTemplateOutlet="toast.template" />
-          </ng-container>
-          <ng-template #messageTemplate>
+          } @else {
             {{ toast.message }}
-          </ng-template>
+          }
         </div>
 
         @if (toast.dismissible) {
