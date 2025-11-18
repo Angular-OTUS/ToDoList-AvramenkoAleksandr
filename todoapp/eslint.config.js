@@ -34,6 +34,8 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      "@angular-eslint/template/click-events-have-key-events": "warn",
+      "@angular-eslint/template/interactive-supports-focus": "warn",
 
       // Angular best practices
       "@angular-eslint/no-empty-lifecycle-method": "warn",

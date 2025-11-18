@@ -1,4 +1,37 @@
-<li [classList]="this.itemClass()" (click)="onSelectItem(id())">
-  <span class="todo-text">{{ id() }}. {{ text() }}</span
-  ><app-button appTooltip="Delete the item" title="Delete" type="delete" (clicked)="onDeleteItem()" />
+<li
+  [classList]="this.itemClass()"
+  (click)="onSelectItem(id())"
+  (dblclick)="$event.stopPropagation(); onDoubleClick()"
+>
+  @if (isEditing()) {
+    <input
+      #editInput
+      class="edit-input"
+      type="text"
+      [(ngModel)]="editText"
+      (keyup.enter)="onSave()"
+      (keyup.escape)="onCancel()"
+    />
+    <div class="edit-actions">
+      <button
+        type="button"
+        (click)="onSave()"
+        class="save-btn"
+        [disabled]="!editText.trim()"
+      >
+        Save
+      </button>
+      <button type="button" (click)="onCancel()" class="cancel-btn">
+        Cancel
+      </button>
+    </div>
+  } @else {
+    <span class="todo-text">{{ id() }}. {{ text() }}</span
+    ><app-button
+      appTooltip="Delete the item"
+      title="Delete"
+      type="delete"
+      (clicked)="onDeleteItem()"
+    />
+  }
 </li>

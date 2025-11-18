@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 
 type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
-type TooltipPositionParameter = TooltipPosition  | 'auto';
+type TooltipPositionParameter = TooltipPosition | 'auto';
 
 interface ViewportBoundaries {
   top: number;
@@ -26,7 +26,9 @@ interface ViewportBoundaries {
 })
 export class TooltipDirective implements OnDestroy {
   readonly appTooltip = input.required<string>();
-  readonly tooltipPosition: InputSignal<TooltipPositionParameter> = input('auto' as TooltipPositionParameter);
+  readonly tooltipPosition: InputSignal<TooltipPositionParameter> = input(
+    'auto' as TooltipPositionParameter,
+  );
   readonly tooltipDelay: InputSignal<number> = input(0);
   readonly viewportMargin: InputSignal<number> = input(8); // Minimum margin from viewport edges
 
@@ -40,7 +42,7 @@ export class TooltipDirective implements OnDestroy {
 
   @HostListener('mouseenter')
   onMouseEnter(): void {
-    console.log("onMouseEnter()");
+    console.log('onMouseEnter()');
 
     if (this.appTooltip() && !this.tooltipElement) {
       if (this.tooltipDelay) {
@@ -55,7 +57,7 @@ export class TooltipDirective implements OnDestroy {
 
   @HostListener('mouseleave')
   onMouseLeave(): void {
-    console.log("onMouseLeave()");
+    console.log('onMouseLeave()');
     if (this.delayTimeout) {
       clearTimeout(this.delayTimeout);
     }
@@ -71,7 +73,7 @@ export class TooltipDirective implements OnDestroy {
   }
 
   private showTooltip(): void {
-    console.log("showTooltip");
+    console.log('showTooltip');
     this.tooltipElement = this.renderer.createElement('div');
     const text = this.renderer.createText(this.appTooltip());
 
@@ -94,27 +96,35 @@ export class TooltipDirective implements OnDestroy {
       return;
     }
 
-    console.log("positionTooltip");
+    console.log('positionTooltip');
     const viewport = this.getViewportBoundaries();
     const hostRect = this.el.nativeElement.getBoundingClientRect();
     const tooltipRect = this.tooltipElement.getBoundingClientRect();
 
     // Determine the best position
-    const bestPosition: TooltipPosition = this.tooltipPosition() === 'auto'
-      ? this.findBestPosition(hostRect, tooltipRect, viewport)
-      : this.tooltipPosition() as TooltipPosition;
+    const bestPosition: TooltipPosition =
+      this.tooltipPosition() === 'auto'
+        ? this.findBestPosition(hostRect, tooltipRect, viewport)
+        : (this.tooltipPosition() as TooltipPosition);
 
     // Remove all position classes
-    ['tooltip-top', 'tooltip-bottom', 'tooltip-left', 'tooltip-right'].forEach(className => {
-      this.renderer.removeClass(this.tooltipElement, className);
-    });
+    ['tooltip-top', 'tooltip-bottom', 'tooltip-left', 'tooltip-right'].forEach(
+      (className) => {
+        this.renderer.removeClass(this.tooltipElement, className);
+      },
+    );
 
     // Add the chosen position class
     this.renderer.addClass(this.tooltipElement, `tooltip-${bestPosition}`);
 
     // Calculate position
-    const position = this.calculatePosition(hostRect, tooltipRect, bestPosition, viewport);
-    console.log("position: ", position);
+    const position = this.calculatePosition(
+      hostRect,
+      tooltipRect,
+      bestPosition,
+      viewport,
+    );
+    console.log('position: ', position);
 
     this.renderer.setStyle(this.tooltipElement, 'top', `${position.top}px`);
     this.renderer.setStyle(this.tooltipElement, 'left', `${position.left}px`);
@@ -129,8 +139,8 @@ export class TooltipDirective implements OnDestroy {
       bottom: scrollY + window.innerHeight - this.viewportMargin(),
       left: scrollX + this.viewportMargin(),
       right: scrollX + window.innerWidth - this.viewportMargin(),
-      width: window.innerWidth - (this.viewportMargin() * 2),
-      height: window.innerHeight - (this.viewportMargin() * 2),
+      width: window.innerWidth - this.viewportMargin() * 2,
+      height: window.innerHeight - this.viewportMargin() * 2,
     };
   }
 
@@ -143,7 +153,12 @@ export class TooltipDirective implements OnDestroy {
     const positionScores = new Map<string, number>();
 
     for (const position of positions) {
-      const calculatedPos = this.calculatePosition(hostRect, tooltipRect, position, viewport);
+      const calculatedPos = this.calculatePosition(
+        hostRect,
+        tooltipRect,
+        position,
+        viewport,
+      );
       const tooltipArea = {
         left: calculatedPos.left,
         right: calculatedPos.left + tooltipRect.width,
@@ -152,13 +167,15 @@ export class TooltipDirective implements OnDestroy {
       };
 
       // Calculate how much of the tooltip is within viewport
-      const visibleWidth = Math.max(0,
+      const visibleWidth = Math.max(
+        0,
         Math.min(tooltipArea.right, viewport.right) -
-        Math.max(tooltipArea.left, viewport.left),
+          Math.max(tooltipArea.left, viewport.left),
       );
-      const visibleHeight = Math.max(0,
+      const visibleHeight = Math.max(
+        0,
         Math.min(tooltipArea.bottom, viewport.bottom) -
-        Math.max(tooltipArea.top, viewport.top),
+          Math.max(tooltipArea.top, viewport.top),
       );
 
       const visibleArea = visibleWidth * visibleHeight;
@@ -172,8 +189,9 @@ export class TooltipDirective implements OnDestroy {
     }
 
     // Return the position with the highest score
-    return Array.from(positionScores.entries())
-      .reduce((best, current) => current[1] > best[1] ? current : best)[0] as TooltipPosition;
+    return Array.from(positionScores.entries()).reduce((best, current) =>
+      current[1] > best[1] ? current : best,
+    )[0] as TooltipPosition;
   }
 
   private calculatePosition(
@@ -192,25 +210,35 @@ export class TooltipDirective implements OnDestroy {
     switch (position) {
       case 'top':
         top = hostRect.top + scrollY - tooltipRect.height - 8;
-        left = hostRect.left + scrollX + (hostRect.width - tooltipRect.width) / 2;
+        left =
+          hostRect.left + scrollX + (hostRect.width - tooltipRect.width) / 2;
         break;
       case 'bottom':
         top = hostRect.bottom + scrollY + 8;
-        left = hostRect.left + scrollX + (hostRect.width - tooltipRect.width) / 2;
+        left =
+          hostRect.left + scrollX + (hostRect.width - tooltipRect.width) / 2;
         break;
       case 'left':
-        top = hostRect.top + scrollY + (hostRect.height - tooltipRect.height) / 2;
+        top =
+          hostRect.top + scrollY + (hostRect.height - tooltipRect.height) / 2;
         left = hostRect.left + scrollX - tooltipRect.width - 8;
         break;
       case 'right':
-        top = hostRect.top + scrollY + (hostRect.height - tooltipRect.height) / 2;
+        top =
+          hostRect.top + scrollY + (hostRect.height - tooltipRect.height) / 2;
         left = hostRect.left + scrollX + hostRect.width + 8;
         break;
     }
 
     // Adjust to keep within viewport boundaries
-    top = Math.max(viewport.top, Math.min(top, viewport.bottom - tooltipRect.height));
-    left = Math.max(viewport.left, Math.min(left, viewport.right - tooltipRect.width));
+    top = Math.max(
+      viewport.top,
+      Math.min(top, viewport.bottom - tooltipRect.height),
+    );
+    left = Math.max(
+      viewport.left,
+      Math.min(left, viewport.right - tooltipRect.width),
+    );
 
     return { top, left };
   }
