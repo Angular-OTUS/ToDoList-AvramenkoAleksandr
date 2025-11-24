@@ -22,6 +22,7 @@ import { ToDoItem } from '../../model/to-do-item';
 import { Button } from '../button/button';
 import { TooltipDirective } from '../../directives/tooltip-directive';
 import { ToastService } from '../../services/toast-service';
+import { LoadingSpinner } from '../loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-to-do-list',
@@ -35,6 +36,7 @@ import { ToastService } from '../../services/toast-service';
     MatProgressSpinnerModule,
     Button,
     TooltipDirective,
+    LoadingSpinner,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',

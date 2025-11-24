@@ -119,14 +119,6 @@ h2 {
   overflow-y: auto;
 }
 
-.spinner-text {
-  margin-left: 40px;
-}
-
-.loading-items-spinner {
-  margin-left: 40px;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {

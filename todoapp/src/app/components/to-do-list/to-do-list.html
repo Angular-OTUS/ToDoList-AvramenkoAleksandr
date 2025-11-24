@@ -6,8 +6,7 @@
     <div class="todo-list-section">
       <h2>Todo Items</h2>
       @if (isLoading) {
-        <div class="spinner-text">Loading todo items...</div>
-        <mat-spinner class="loading-items-spinner" diameter="40" />
+        <app-loading-spinner> Loading todo items... </app-loading-spinner>
       } @else {
         <ul class="todo-list" id="todoList">
           @for (item of allItems(); track item.id) {
