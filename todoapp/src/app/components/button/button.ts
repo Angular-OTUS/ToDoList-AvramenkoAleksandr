@@ -16,7 +16,6 @@ export type ButtonType = 'add' | 'delete';
 })
 export class Button {
   readonly type = input.required<ButtonType>();
-  readonly title = input<string>('');
   readonly isEnabled = input<boolean>(true);
   readonly clicked = output<Event>();
 
