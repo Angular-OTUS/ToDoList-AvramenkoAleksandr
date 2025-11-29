@@ -3,6 +3,12 @@
   (click)="onSelectItem(id())"
   (dblclick)="$event.stopPropagation(); onDoubleClick()"
 >
+  <input
+    type="checkbox"
+    name="isCompleted"
+    [checked]="isCompleted()"
+    (change)="onCheckboxChange($event)"
+  />
   @if (isEditing()) {
     <input
       #editInput

@@ -1,5 +1,5 @@
 import { Injectable, Signal, signal } from '@angular/core';
-import { ToDoItem } from '../model/to-do-item';
+import { ItemStatus, ToDoItem } from '../model/to-do-item';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +34,23 @@ export class DataService {
         };
       }),
     );
+  }
+
+  checkItem(itemId: string, check: boolean): void {
+    this.toDoItemList.update((currentItems) =>
+      currentItems.map((item) => {
+        return {
+          ...item,
+          status:
+            item.id === itemId ? this.booleanToStatus(check) : item.status,
+        };
+      }),
+    );
+    console.log('toDoItemList: ', this.toDoItemList());
+  }
+
+  private booleanToStatus(check: boolean): ItemStatus {
+    return check ? 'Completed' : 'InProgress';
   }
 
   updateItem(itemId: string, isEditing: boolean, newText: string): void {

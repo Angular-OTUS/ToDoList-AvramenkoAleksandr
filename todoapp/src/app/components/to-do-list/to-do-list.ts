@@ -68,18 +68,21 @@ export class ToDoList implements OnInit, AfterViewInit {
         text: 'Умыться',
         description: 'Надо, надо умываться по утрам и вечерам!',
         isEditing: false,
+        status: 'InProgress',
       },
       {
         id: '2',
         text: 'Сделать зарядку',
         description: 'Полезно для здоровья',
         isEditing: false,
+        status: 'InProgress',
       },
       {
         id: '3',
         text: 'Почитать почту',
         description: 'Там может быть что-то важное',
         isEditing: false,
+        status: 'Completed',
       },
     ];
     this.dataService.addAllTodoItems(items);
@@ -115,6 +118,7 @@ export class ToDoList implements OnInit, AfterViewInit {
         text: itemText,
         description: descriptionField.value,
         isEditing: false,
+        status: 'InProgress',
       });
 
       inputField.value = '';
@@ -160,6 +164,11 @@ export class ToDoList implements OnInit, AfterViewInit {
     } else {
       console.error('Item with id=', selectedItemId, ' not found');
     }
+  }
+
+  onCheckedItem(itemId: string, check: boolean): void {
+    console.log('onCheckedItem item with id=', itemId, ' with value=', check);
+    this.dataService.checkItem(itemId, check);
   }
 
   onDeleteItem(itemId: string): void {

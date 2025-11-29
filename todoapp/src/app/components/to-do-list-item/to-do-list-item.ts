@@ -28,11 +28,13 @@ export class ToDoListItem {
   readonly text = input.required<string>();
   readonly isSelected = input<boolean>(false);
   readonly isEditing = input<boolean>(false);
+  readonly isCompleted = input<boolean>(false);
 
   readonly itemDeleted = output<string>();
   readonly itemSelected = output<string>();
   readonly itemEdited = output<EditInfo>();
   readonly itemStartEditing = output<string>();
+  readonly itemChecked = output<boolean>();
 
   readonly itemClass = computed(() =>
     this.isSelected() ? 'todo-item selected' : 'todo-item',
@@ -79,6 +81,13 @@ export class ToDoListItem {
       action: 'cancel',
     });
     this.editText = '';
+  }
+
+  onCheckboxChange(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    const isChecked = checkbox.checked;
+    console.log('Checkbox checked:', isChecked);
+    this.itemChecked.emit(isChecked);
   }
 
   getClasses(): string[] {

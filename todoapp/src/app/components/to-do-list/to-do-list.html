@@ -13,9 +13,11 @@
             <app-to-do-list-item
               appTooltip="{{ item.description }}"
               [id]="item.id"
+              [isCompleted]="item.status === 'Completed'"
               [isEditing]="item.isEditing"
               [isSelected]="item.id === selectedItemId"
               [text]="item.text"
+              (itemChecked)="onCheckedItem(item.id, $event)"
               (itemDeleted)="onDeleteItem($event)"
               (itemEdited)="onItemEdited($event)"
               (itemSelected)="onSelectItem($event)"
