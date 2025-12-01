@@ -178,6 +178,12 @@ export class ToDoList implements OnInit, AfterViewInit {
     this.toastService.showToast('Todo item was removed', 'info');
   }
 
+  onItemStatusFilterChanged(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    console.log('Selected value:', selectedValue);
+    this.dataService.setItemStatusFilter(selectedValue);
+  }
+
   isAddButtonEnabled(): boolean {
     const inputField = this.newItemTextSignal().nativeElement;
     return inputField.value?.length > 0;

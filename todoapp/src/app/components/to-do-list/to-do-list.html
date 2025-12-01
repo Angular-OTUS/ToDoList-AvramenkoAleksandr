@@ -1,6 +1,21 @@
 <div class="todo-app">
   <h1>TODO Application</h1>
 
+  <div class="filter-todo-section">
+    <label class="filter-label" for="statusFilter"
+      >Select TODO items with status:</label
+    >
+    <select
+      id="statusFilter"
+      name="statusFilter"
+      (change)="onItemStatusFilterChanged($event)"
+    >
+      <option selected value="ALL">All items</option>
+      <option value="InProgress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
+
   <div class="main-content">
     <!-- Todo List Section -->
     <div class="todo-list-section">
