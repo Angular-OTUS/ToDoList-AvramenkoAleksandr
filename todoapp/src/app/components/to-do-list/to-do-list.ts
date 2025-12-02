@@ -94,15 +94,9 @@ export class ToDoList implements OnInit {
   onAddItem(newItem: ToDoItem): void {
     console.log('Adding an item: ', newItem);
 
-    const currentIdList = this.dataService
-      .getAllToDoItems()()
-      .map((val) => Number(val.id));
-    console.log('currentIdList: ', currentIdList);
-    const newItemId =
-      currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1;
     this.dataService.addNewTodoItem(newItem);
 
-    this.onSelectItem(newItemId.toString());
+    this.onSelectItem(newItem.id);
 
     this.toastService.showToast('Todo item was added', 'success');
   }
