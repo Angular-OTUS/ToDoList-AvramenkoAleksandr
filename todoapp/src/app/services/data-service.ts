@@ -10,6 +10,17 @@ export class DataService {
   private readonly displayToDoItemList = computed(() => {
     return this.applyFilter(this.toDoItemList(), this.itemStatusFilter());
   });
+  private readonly newItemId = computed(() => {
+    const currentIdList = this.toDoItemList().map((val) => Number(val.id));
+    console.log('currentIdList: ', currentIdList);
+    return (
+      currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1
+    ).toString();
+  });
+
+  getNewItemId(): Signal<string> {
+    return this.newItemId;
+  }
 
   setItemStatusFilter(statusFilter: string): void {
     this.itemStatusFilter.set(statusFilter);

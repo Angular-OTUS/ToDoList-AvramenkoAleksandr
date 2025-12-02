@@ -19,14 +19,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ToDoItem } from '../../model/to-do-item';
-import { Button } from '../button/button';
 import { TooltipDirective } from '../../directives/tooltip-directive';
 import { ToastService } from '../../services/toast-service';
 import { LoadingSpinner } from '../loading-spinner/loading-spinner';
+import { AddToDoItem } from '../add-to-do-item/add-to-do-item';
 
 @Component({
   selector: 'app-to-do-list',
   imports: [
+    AddToDoItem,
     ToDoListItem,
     MatFormFieldModule,
     MatInputModule,
@@ -34,7 +35,6 @@ import { LoadingSpinner } from '../loading-spinner/loading-spinner';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    Button,
     TooltipDirective,
     LoadingSpinner,
   ],
@@ -42,15 +42,11 @@ import { LoadingSpinner } from '../loading-spinner/loading-spinner';
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToDoList implements OnInit, AfterViewInit {
+export class ToDoList implements OnInit {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private toastService: ToastService = inject(ToastService);
   private dataService: DataService = inject(DataService);
 
-  readonly newItemTextSignal =
-    viewChild.required<ElementRef<HTMLInputElement>>('newItemText');
-  readonly newItemDescriptionSignal =
-    viewChild.required<ElementRef<HTMLTextAreaElement>>('newItemDescription');
   readonly currentItemDescriptionSignal = viewChild.required<
     ElementRef<HTMLTextAreaElement>
   >('currentItemDescription');
@@ -60,6 +56,7 @@ export class ToDoList implements OnInit, AfterViewInit {
   isLoading: boolean = true;
 
   allItems = this.dataService.getAllToDoItems();
+  newItemId = this.dataService.getNewItemId();
 
   ngOnInit(): void {
     const items: ToDoItem[] = [
@@ -94,39 +91,20 @@ export class ToDoList implements OnInit, AfterViewInit {
     }, 500);
   }
 
-  ngAfterViewInit(): void {
-    console.log(
-      'ngAfterViewInit, newItemTextSignal()=',
-      this.newItemTextSignal(),
-    );
-  }
+  onAddItem(newItem: ToDoItem): void {
+    console.log('Adding an item: ', newItem);
 
-  onAddItem(): void {
-    console.log('Adding an item');
-    const inputField = this.newItemTextSignal().nativeElement;
-    if (inputField.value?.length ?? 0 > 0) {
-      const currentIdList = this.dataService
-        .getAllToDoItems()()
-        .map((val) => Number(val.id));
-      console.log('currentIdList: ', currentIdList);
-      const newItemId =
-        currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1;
-      const descriptionField = this.newItemDescriptionSignal().nativeElement;
-      const itemText = inputField.value;
-      this.dataService.addNewTodoItem({
-        id: newItemId.toString(),
-        text: itemText,
-        description: descriptionField.value,
-        isEditing: false,
-        status: 'InProgress',
-      });
+    const currentIdList = this.dataService
+      .getAllToDoItems()()
+      .map((val) => Number(val.id));
+    console.log('currentIdList: ', currentIdList);
+    const newItemId =
+      currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1;
+    this.dataService.addNewTodoItem(newItem);
 
-      inputField.value = '';
-      descriptionField.value = '';
-      this.onSelectItem(newItemId.toString());
+    this.onSelectItem(newItemId.toString());
 
-      this.toastService.showToast('Todo item was added', 'success');
-    }
+    this.toastService.showToast('Todo item was added', 'success');
   }
 
   onStartEditing(itemId: string): void {
@@ -182,10 +160,5 @@ export class ToDoList implements OnInit, AfterViewInit {
     const selectedValue = (event.target as HTMLSelectElement).value;
     console.log('Selected value:', selectedValue);
     this.dataService.setItemStatusFilter(selectedValue);
-  }
-
-  isAddButtonEnabled(): boolean {
-    const inputField = this.newItemTextSignal().nativeElement;
-    return inputField.value?.length > 0;
   }
 }

@@ -1,0 +1,34 @@
+<!-- Add New Todo Section -->
+<div class="add-todo-section">
+  <h2>Add New Todo</h2>
+  <form [formGroup]="addTodoForm" (ngSubmit)="onAddItem()">
+    <div class="input-group">
+      <input
+        class="todo-input"
+        formControlName="newItemText"
+        id="newItemText"
+        matInput
+        placeholder="Enter a todo text"
+        type="text"
+      />
+    </div>
+    <div class="input-group">
+      <textarea
+        class="todo-textarea"
+        formControlName="newItemDescription"
+        id="newItemDescription"
+        matInput
+        placeholder="Enter a todo description"
+      ></textarea>
+    </div>
+    <app-button
+      #addItemButton
+      appTooltip="Add a new item"
+      id="addItemButton"
+      type="add"
+      [isEnabled]="isAddButtonEnabled()"
+      (clicked)="onAddItem()"
+      >Add new todo item
+    </app-button>
+  </form>
+</div>
