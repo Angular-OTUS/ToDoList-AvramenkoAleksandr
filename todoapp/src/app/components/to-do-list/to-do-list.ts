@@ -1,14 +1,11 @@
 import { DataService } from './../../services/data-service';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
   ElementRef,
   inject,
   OnInit,
-  signal,
   viewChild,
 } from '@angular/core';
 import { EditInfo, ToDoListItem } from '../to-do-list-item/to-do-list-item';
@@ -23,6 +20,7 @@ import { TooltipDirective } from '../../directives/tooltip-directive';
 import { ToastService } from '../../services/toast-service';
 import { LoadingSpinner } from '../loading-spinner/loading-spinner';
 import { AddToDoItem } from '../add-to-do-item/add-to-do-item';
+import { delay, first, tap } from 'rxjs';
 
 @Component({
   selector: 'app-to-do-list',
@@ -55,50 +53,39 @@ export class ToDoList implements OnInit {
 
   isLoading: boolean = true;
 
-  allItems = this.dataService.getAllToDoItems();
-  newItemId = this.dataService.getNewItemId();
+  allItems = this.dataService.getDisplayedToDoItems();
+  newItemId(): string {
+    return this.dataService.getNewItemId();
+  }
 
   ngOnInit(): void {
-    const items: ToDoItem[] = [
-      {
-        id: '1',
-        text: 'Умыться',
-        description: 'Надо, надо умываться по утрам и вечерам!',
-        isEditing: false,
-        status: 'InProgress',
-      },
-      {
-        id: '2',
-        text: 'Сделать зарядку',
-        description: 'Полезно для здоровья',
-        isEditing: false,
-        status: 'InProgress',
-      },
-      {
-        id: '3',
-        text: 'Почитать почту',
-        description: 'Там может быть что-то важное',
-        isEditing: false,
-        status: 'Completed',
-      },
-    ];
-    this.dataService.addAllTodoItems(items);
-
-    setTimeout(() => {
-      this.isLoading = false;
-      console.log('Loading items done, isLoading=', this.isLoading);
-      this.cdr.markForCheck();
-    }, 500);
+    this.dataService
+      .loadToDoItems()
+      .pipe(
+        delay(500),
+        first(),
+        tap(() => {
+          this.isLoading = false;
+          console.log('Loading items done, isLoading=', this.isLoading);
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe();
   }
 
   onAddItem(newItem: ToDoItem): void {
     console.log('Adding an item: ', newItem);
 
-    this.dataService.addNewTodoItem(newItem);
-
-    this.onSelectItem(newItem.id);
-
-    this.toastService.showToast('Todo item was added', 'success');
+    this.dataService
+      .addNewTodoItem(newItem)
+      .pipe(
+        first(),
+        tap(() => {
+          this.onSelectItem(newItem.id);
+          this.toastService.showToast('Todo item was added', 'success');
+        }),
+      )
+      .subscribe();
   }
 
   onStartEditing(itemId: string): void {
@@ -107,21 +94,23 @@ export class ToDoList implements OnInit {
   }
 
   onItemEdited(editInfo: EditInfo): void {
-    if (editInfo.action === 'save') {
-      this.dataService.updateItem(
-        editInfo.itemId,
-        editInfo.isEditing,
-        editInfo.newText,
-      );
-    }
     this.dataService.startItemEditing(editInfo.itemId, false);
+    if (editInfo.action === 'save') {
+      this.dataService
+        .updateItem(editInfo.itemId, editInfo.newText)
+        .pipe(
+          first(),
+          tap((result) => console.log('Update item result: ', result)),
+        )
+        .subscribe();
+    }
   }
 
   onSelectItem(selectedItemId: string): void {
     const itemDescriptionTextArea =
       this.currentItemDescriptionSignal().nativeElement;
     const currentItem = this.dataService
-      .getAllToDoItems()()
+      .getDisplayedToDoItems()()
       .find((item) => item.id === selectedItemId);
     if (currentItem) {
       if (this.selectedItemId !== selectedItemId) {
@@ -140,14 +129,27 @@ export class ToDoList implements OnInit {
 
   onCheckedItem(itemId: string, check: boolean): void {
     console.log('onCheckedItem item with id=', itemId, ' with value=', check);
-    this.dataService.checkItem(itemId, check);
+    this.dataService
+      .checkItem(itemId, check)
+      .pipe(
+        first(),
+        tap((result) => console.log('Check item result: ', result)),
+      )
+      .subscribe();
   }
 
   onDeleteItem(itemId: string): void {
     console.log('Deleting item with id=', itemId);
-    this.dataService.removeToDoItem(itemId);
-
-    this.toastService.showToast('Todo item was removed', 'info');
+    this.dataService
+      .removeToDoItem(itemId)
+      .pipe(
+        first(),
+        tap((result) => console.log('Check item result: ', result)),
+        tap(() => {
+          this.toastService.showToast('Todo item was removed', 'info');
+        }),
+      )
+      .subscribe();
   }
 
   onItemStatusFilterChanged(event: Event): void {

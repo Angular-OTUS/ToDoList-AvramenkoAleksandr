@@ -15,7 +15,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.error instanceof ErrorEvent) {
         // Client-side error
         errorMessage = `Client Error: ${error.error.message}`;
-        userFriendlyMessage = 'A client-side error occurred. Please check your connection.';
+        userFriendlyMessage =
+          'A client-side error occurred. Please check your connection.';
         console.error('Client-side error:', error.error);
       } else {
         // Server-side error
@@ -24,7 +25,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         switch (error.status) {
           case 0:
             errorMessage = 'Network error. Server might be down.';
-            userFriendlyMessage = 'Unable to connect to server. Please check your internet connection.';
+            userFriendlyMessage =
+              'Unable to connect to server. Please check your internet connection.';
             console.error('Network error - server might be down');
             break;
 
@@ -36,7 +38,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
           case 401:
             errorMessage = 'Unauthorized access';
-            userFriendlyMessage = 'Your session has expired. Please login again.';
+            userFriendlyMessage =
+              'Your session has expired. Please login again.';
             shouldRedirect = true;
             redirectTo = '/login';
             console.warn('Unauthorized access:', req.url);
@@ -44,7 +47,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
           case 403:
             errorMessage = 'Forbidden';
-            userFriendlyMessage = 'You do not have permission to access this resource.';
+            userFriendlyMessage =
+              'You do not have permission to access this resource.';
             console.warn('Forbidden access:', req.url);
             break;
 
@@ -68,31 +72,36 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
           case 429:
             errorMessage = 'Too many requests';
-            userFriendlyMessage = 'Too many requests. Please try again in a few minutes.';
+            userFriendlyMessage =
+              'Too many requests. Please try again in a few minutes.';
             console.warn('Rate limit exceeded:', req.url);
             break;
 
           case 500:
             errorMessage = 'Internal Server Error';
-            userFriendlyMessage = 'Something went wrong on our end. Please try again later.';
+            userFriendlyMessage =
+              'Something went wrong on our end. Please try again later.';
             console.error('Server Error:', serverError);
             break;
 
           case 502:
             errorMessage = 'Bad Gateway';
-            userFriendlyMessage = 'Server is temporarily unavailable. Please try again later.';
+            userFriendlyMessage =
+              'Server is temporarily unavailable. Please try again later.';
             console.error('Bad Gateway:', req.url);
             break;
 
           case 503:
             errorMessage = 'Service Unavailable';
-            userFriendlyMessage = 'Service is temporarily unavailable. Please try again later.';
+            userFriendlyMessage =
+              'Service is temporarily unavailable. Please try again later.';
             console.error('Service Unavailable:', req.url);
             break;
 
           case 504:
             errorMessage = 'Gateway Timeout';
-            userFriendlyMessage = 'The request took too long. Please try again.';
+            userFriendlyMessage =
+              'The request took too long. Please try again.';
             console.error('Gateway Timeout:', req.url);
             break;
 
@@ -115,13 +124,17 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         status: error.status,
         originalError: error,
         timestamp: new Date().toISOString(),
-        url: req.url
+        url: req.url,
       }));
-    })
+    }),
   );
 };
 
-function logErrorDetails(req: any, error: HttpErrorResponse, errorMessage: string): void {
+function logErrorDetails(
+  req: any,
+  error: HttpErrorResponse,
+  errorMessage: string,
+): void {
   const errorDetails = {
     timestamp: new Date().toISOString(),
     url: req.url,
@@ -131,19 +144,19 @@ function logErrorDetails(req: any, error: HttpErrorResponse, errorMessage: strin
     message: errorMessage,
     requestBody: req.body,
     responseBody: error.error,
-    headers: req.headers
+    headers: req.headers,
   };
 
   console.group('HTTP Error Details');
   console.log('Request:', {
     url: errorDetails.url,
     method: errorDetails.method,
-    body: errorDetails.requestBody
+    body: errorDetails.requestBody,
   });
   console.log('Response:', {
     status: errorDetails.status,
     statusText: errorDetails.statusText,
-    body: errorDetails.responseBody
+    body: errorDetails.responseBody,
   });
   console.groupEnd();
 }

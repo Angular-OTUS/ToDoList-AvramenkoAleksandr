@@ -1,5 +1,15 @@
-import { computed, Injectable, Signal, signal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import { ItemStatus, ToDoItem } from '../model/to-do-item';
+import { ApiService } from './api-service';
+import { concat, concatMap, first, Observable, tap } from 'rxjs';
+
+function* idSequence() {
+  let num = 0;
+  while (true) {
+    yield num;
+    num += 1;
+  }
+}
 
 @Injectable({
   providedIn: 'root',
@@ -10,38 +20,34 @@ export class DataService {
   private readonly displayToDoItemList = computed(() => {
     return this.applyFilter(this.toDoItemList(), this.itemStatusFilter());
   });
-  private readonly newItemId = computed(() => {
-    const currentIdList = this.toDoItemList().map((val) => Number(val.id));
-    console.log('currentIdList: ', currentIdList);
-    return (
-      currentIdList.length === 0 ? 1 : Math.max(...currentIdList) + 1
-    ).toString();
-  });
+  private idSeq = idSequence();
 
-  getNewItemId(): Signal<string> {
-    return this.newItemId;
+  private readonly apiService = inject(ApiService);
+
+  getNewItemId(): string {
+    const newIdValue = this.idSeq.next().value as number;
+    console.log('newIdValue: ', newIdValue);
+    return newIdValue.toString();
   }
 
   setItemStatusFilter(statusFilter: string): void {
     this.itemStatusFilter.set(statusFilter);
   }
 
-  addNewTodoItem(item: ToDoItem): void {
-    this.toDoItemList.update((currentItems) => [...currentItems, item]);
+  addNewTodoItem(item: Omit<ToDoItem, 'isEditing'>): Observable<ToDoItem> {
+    return this.apiService
+      .createTodo(item)
+      .pipe(concatMap(() => this.loadToDoItems()));
   }
 
-  addAllTodoItems(itemList: ToDoItem[]): void {
-    this.toDoItemList.update((currentItems) => [...currentItems, ...itemList]);
-  }
-
-  getAllToDoItems(): Signal<ToDoItem[]> {
+  getDisplayedToDoItems(): Signal<ToDoItem[]> {
     return this.displayToDoItemList;
   }
 
-  removeToDoItem(itemId: string): void {
-    this.toDoItemList.update((currentItems) =>
-      currentItems.filter((value) => value.id !== itemId),
-    );
+  removeToDoItem(itemId: string): Observable<any> {
+    return this.apiService
+      .deleteTodo(itemId)
+      .pipe(concatMap(() => this.loadToDoItems()));
   }
 
   startItemEditing(itemId: string, isEditing: boolean): void {
@@ -55,17 +61,18 @@ export class DataService {
     );
   }
 
-  checkItem(itemId: string, check: boolean): void {
-    this.toDoItemList.update((currentItems) =>
-      currentItems.map((item) => {
-        return {
-          ...item,
-          status:
-            item.id === itemId ? this.booleanToStatus(check) : item.status,
-        };
-      }),
+  checkItem(itemId: string, check: boolean): Observable<any> {
+    return this.apiService
+      .setTodoCompletionStatus(itemId, check)
+      .pipe(concatMap(() => this.loadToDoItems()));
+  }
+
+  loadToDoItems(): Observable<any> {
+    console.log('loadToDoItems called');
+    return this.apiService.getAllTodos().pipe(
+      tap((response) => console.log('Response data: ', response)),
+      tap((response) => this.toDoItemList.set(response)),
     );
-    console.log('toDoItemList: ', this.toDoItemList());
   }
 
   private booleanToStatus(check: boolean): ItemStatus {
@@ -88,15 +95,9 @@ export class DataService {
     }
   }
 
-  updateItem(itemId: string, isEditing: boolean, newText: string): void {
-    this.toDoItemList.update((currentItems) =>
-      currentItems.map((item) => {
-        return {
-          ...item,
-          isEditing: item.id === itemId ? isEditing : item.isEditing,
-          text: item.id === itemId ? newText : item.text,
-        };
-      }),
-    );
+  updateItem(itemId: string, newText: string): Observable<any> {
+    return this.apiService
+      .patchTodo(itemId, { text: newText })
+      .pipe(concatMap(() => this.loadToDoItems()));
   }
 }

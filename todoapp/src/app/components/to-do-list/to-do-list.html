@@ -28,6 +28,7 @@
             <app-to-do-list-item
               appTooltip="{{ item.description }}"
               [id]="item.id"
+              [index]="$index + 1"
               [isCompleted]="item.status === 'Completed'"
               [isEditing]="item.isEditing"
               [isSelected]="item.id === selectedItemId"

@@ -25,6 +25,7 @@ export interface EditInfo {
 })
 export class ToDoListItem {
   readonly id = input.required<string>();
+  readonly index = input.required<number>();
   readonly text = input.required<string>();
   readonly isSelected = input<boolean>(false);
   readonly isEditing = input<boolean>(false);
