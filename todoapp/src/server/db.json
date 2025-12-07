@@ -17,42 +17,6 @@
       "text": "Почитать почту",
       "description": "Там может быть что-то важное",
       "status": "Completed"
-    },
-    {
-      "id": "f739",
-      "text": "Test todo",
-      "description": "Created by test script",
-      "completed": false
-    },
-    {
-      "id": "c562",
-      "text": "Test todo",
-      "description": "Created by test script",
-      "status": "InProgress"
-    },
-    {
-      "id": "a034",
-      "text": "Test todo",
-      "description": "Created by test script",
-      "status": "InProgress"
-    },
-    {
-      "id": "26e9",
-      "text": "Test todo",
-      "description": "Created by test script",
-      "status": "InProgress"
-    },
-    {
-      "id": "2072",
-      "text": "Test todo",
-      "description": "Created by test script",
-      "status": "InProgress"
-    },
-    {
-      "id": "1059",
-      "text": "Test todo",
-      "description": "Created by test script",
-      "status": "InProgress"
     }
   ]
 }
