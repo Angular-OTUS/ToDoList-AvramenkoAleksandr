@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ToDoItem } from '../../model/to-do-item';
+import { AddToDoItemDto, } from '../../model/to-do-item';
 import { TooltipDirective } from '../../directives/tooltip-directive';
 import { ToastService } from '../../services/toast-service';
 import { LoadingSpinner } from '../loading-spinner/loading-spinner';
@@ -70,15 +70,15 @@ export class ToDoList implements OnInit {
       .subscribe();
   }
 
-  onAddItem(newItem: ToDoItem): void {
+  onAddItem(newItem: AddToDoItemDto): void {
     console.log('Adding an item: ', newItem);
 
     this.dataService
       .addNewTodoItem(newItem)
       .pipe(
         first(),
-        tap(() => {
-          this.onSelectItem(newItem.id);
+        tap((item) => {
+          this.onSelectItem(item.id);
           this.toastService.showToast('Todo item was added', 'success');
         }),
       )

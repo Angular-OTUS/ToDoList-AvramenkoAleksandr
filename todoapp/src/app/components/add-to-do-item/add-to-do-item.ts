@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ToDoItem } from '../../model/to-do-item';
+import { AddToDoItemDto } from '../../model/to-do-item';
 import { Button } from '../button/button';
 import { TooltipDirective } from '../../directives/tooltip-directive';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,7 +38,7 @@ function* idSequence() {
 })
 export class AddToDoItem {
   private fb = inject(FormBuilder);
-  readonly itemAdded = output<ToDoItem>();
+  readonly itemAdded = output<AddToDoItemDto>();
   private idSeq = idSequence();
 
   addTodoForm: FormGroup;
@@ -72,16 +72,15 @@ export class AddToDoItem {
   }
 
   onAddItem(): void {
+    console.log('onAddItem() was called');
     if (this.addTodoForm.valid) {
       const formValue = this.addTodoForm.value;
       console.log('Adding an item from form value: ', formValue);
       const itemText = formValue['newItemText'];
       const itemDescription = formValue['newItemDescription'];
-      const newItem: ToDoItem = {
-        id: this.newItemId(),
+      const newItem: AddToDoItemDto = {
         text: itemText,
         description: itemDescription,
-        isEditing: false,
         status: 'InProgress',
       };
       this.resetForm();

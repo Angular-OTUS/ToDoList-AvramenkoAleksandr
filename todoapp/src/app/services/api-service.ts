@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { ToDoItem } from '../model/to-do-item';
+import { AddToDoItemDto, ToDoItem } from '../model/to-do-item';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, first, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -56,7 +56,7 @@ export class ApiService {
     );
   }
 
-  createTodo(todo: CreateTodoDto): Observable<ToDoItem> {
+  createTodo(todo: AddToDoItemDto): Observable<ToDoItem> {
     this.loadingSignal.set(true);
 
     return this.http.post<ToDoItem>(this.apiUrl, todo).pipe(

@@ -1,15 +1,7 @@
 import { computed, inject, Injectable, Signal, signal } from '@angular/core';
-import { ItemStatus, ToDoItem } from '../model/to-do-item';
+import { AddToDoItemDto, ItemStatus, ToDoItem } from '../model/to-do-item';
 import { ApiService } from './api-service';
 import { concat, concatMap, first, Observable, tap } from 'rxjs';
-
-function* idSequence() {
-  let num = 0;
-  while (true) {
-    yield num;
-    num += 1;
-  }
-}
 
 @Injectable({
   providedIn: 'root',
@@ -20,21 +12,14 @@ export class DataService {
   private readonly displayToDoItemList = computed(() => {
     return this.applyFilter(this.toDoItemList(), this.itemStatusFilter());
   });
-  private idSeq = idSequence();
 
   private readonly apiService = inject(ApiService);
-
-  getNewItemId(): string {
-    const newIdValue = this.idSeq.next().value as number;
-    console.log('newIdValue: ', newIdValue);
-    return newIdValue.toString();
-  }
 
   setItemStatusFilter(statusFilter: string): void {
     this.itemStatusFilter.set(statusFilter);
   }
 
-  addNewTodoItem(item: Omit<ToDoItem, 'isEditing'>): Observable<ToDoItem> {
+  addNewTodoItem(item: AddToDoItemDto): Observable<ToDoItem> {
     return this.apiService
       .createTodo(item)
       .pipe(concatMap(() => this.loadToDoItems()));

@@ -7,3 +7,5 @@ export interface ToDoItem {
   isEditing: boolean;
   status: ItemStatus;
 }
+
+export type AddToDoItemDto = Omit<ToDoItem, 'id' | 'isEditing'>;
