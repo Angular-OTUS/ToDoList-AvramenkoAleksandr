@@ -61,6 +61,7 @@ export class ApiService {
 
     return this.http.post<ToDoItem>(this.apiUrl, todo).pipe(
       tap((response) => {
+        console.log('createTodo returned response: ', response);
         this.loadingSignal.set(false);
       }),
       catchError((error) => {

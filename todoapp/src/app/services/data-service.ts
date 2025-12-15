@@ -1,7 +1,18 @@
 import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import { AddToDoItemDto, ItemStatus, ToDoItem } from '../model/to-do-item';
 import { ApiService } from './api-service';
-import { concat, concatMap, first, Observable, tap } from 'rxjs';
+import {
+  combineLatest,
+  concat,
+  concatMap,
+  first,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+  zip,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,17 +30,25 @@ export class DataService {
     this.itemStatusFilter.set(statusFilter);
   }
 
-  addNewTodoItem(item: AddToDoItemDto): Observable<ToDoItem> {
+  addNewTodoItem(
+    item: AddToDoItemDto,
+  ): Observable<readonly [ToDoItem, ToDoItem[]]> {
     return this.apiService
       .createTodo(item)
-      .pipe(concatMap(() => this.loadToDoItems()));
+      .pipe(
+        switchMap((createdItem) =>
+          this.loadToDoItems().pipe(
+            map((itemList) => [createdItem, itemList] as const),
+          ),
+        ),
+      );
   }
 
   getDisplayedToDoItems(): Signal<ToDoItem[]> {
     return this.displayToDoItemList;
   }
 
-  removeToDoItem(itemId: string): Observable<any> {
+  removeToDoItem(itemId: string): Observable<ToDoItem[]> {
     return this.apiService
       .deleteTodo(itemId)
       .pipe(concatMap(() => this.loadToDoItems()));
@@ -52,7 +71,7 @@ export class DataService {
       .pipe(concatMap(() => this.loadToDoItems()));
   }
 
-  loadToDoItems(): Observable<any> {
+  loadToDoItems(): Observable<ToDoItem[]> {
     console.log('loadToDoItems called');
     return this.apiService.getAllTodos().pipe(
       tap((response) => console.log('Response data: ', response)),
