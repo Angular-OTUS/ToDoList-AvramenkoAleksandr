@@ -18,7 +18,7 @@ import {
   providedIn: 'root',
 })
 export class DataService {
-  private readonly itemStatusFilter = signal<string>('ALL');
+  private readonly itemStatusFilter = signal<string | null>(null);
   private readonly toDoItemList = signal<ToDoItem[]>([]);
   private readonly displayToDoItemList = computed(() => {
     return this.applyFilter(this.toDoItemList(), this.itemStatusFilter());
@@ -79,13 +79,9 @@ export class DataService {
     );
   }
 
-  private booleanToStatus(check: boolean): ItemStatus {
-    return check ? 'Completed' : 'InProgress';
-  }
-
   private applyFilter(
     itemList: ToDoItem[],
-    itemStatusFilter: string,
+    itemStatusFilter: string | null,
   ): ToDoItem[] {
     console.log('Applying filter: ', itemStatusFilter);
     switch (itemStatusFilter) {
@@ -93,7 +89,7 @@ export class DataService {
         return itemList.filter((item) => item.status === 'InProgress');
       case 'Completed':
         return itemList.filter((item) => item.status === 'Completed');
-      case 'ALL':
+      case null:
       default:
         return itemList;
     }
