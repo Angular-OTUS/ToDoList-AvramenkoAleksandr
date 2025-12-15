@@ -7,7 +7,8 @@
     type="checkbox"
     name="isCompleted"
     [checked]="isCompleted()"
-    (change)="onCheckboxChange($event)"
+    (change)="$event.stopPropagation();onCheckboxChange($event);"
+    (click)="$event.stopPropagation();"
   />
   @if (isEditing()) {
     <input
