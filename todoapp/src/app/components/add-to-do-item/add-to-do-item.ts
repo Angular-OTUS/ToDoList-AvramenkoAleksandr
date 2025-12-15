@@ -1,15 +1,7 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  input,
-  output,
-  viewChild,
-} from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -20,6 +12,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+
+function* idSequence() {
+  let num = 0;
+  while (true) {
+    yield num;
+    num += 1;
+  }
+}
 
 @Component({
   selector: 'app-add-to-do-item',
@@ -38,13 +38,19 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class AddToDoItem {
   private fb = inject(FormBuilder);
-  readonly newItemId = input.required<string>();
   readonly itemAdded = output<ToDoItem>();
+  private idSeq = idSequence();
 
   addTodoForm: FormGroup;
 
   constructor() {
     this.addTodoForm = this.createForm();
+  }
+
+  private newItemId(): string {
+    const newIdValue = this.idSeq.next().value as number;
+    console.log('newIdValue: ', newIdValue);
+    return newIdValue.toString();
   }
 
   private createForm(): FormGroup {

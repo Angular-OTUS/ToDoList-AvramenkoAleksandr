@@ -59,8 +59,5 @@
     </div>
   </div>
 
-  <app-add-to-do-item
-    [newItemId]="newItemId()"
-    (itemAdded)="onAddItem($event)"
-  />
+  <app-add-to-do-item (itemAdded)="onAddItem($event)" />
 </div>

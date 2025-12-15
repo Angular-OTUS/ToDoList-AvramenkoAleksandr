@@ -54,9 +54,6 @@ export class ToDoList implements OnInit {
   isLoading: boolean = true;
 
   allItems = this.dataService.getDisplayedToDoItems();
-  newItemId(): string {
-    return this.dataService.getNewItemId();
-  }
 
   ngOnInit(): void {
     this.dataService
