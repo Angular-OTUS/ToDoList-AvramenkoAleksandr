@@ -68,7 +68,7 @@ export class DataService {
     itemList: ToDoItem[],
     itemStatusFilter: string,
   ): ToDoItem[] {
-    console.log('Appliing filter: ', itemStatusFilter);
+    console.log('Applying filter: ', itemStatusFilter);
     switch (itemStatusFilter) {
       case 'InProgress':
         return itemList.filter((item) => item.status === 'InProgress');
