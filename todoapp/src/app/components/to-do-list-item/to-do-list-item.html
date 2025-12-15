@@ -37,7 +37,7 @@
     ><app-button
       appTooltip="Delete the item"
       type="delete"
-      (clicked)="onDeleteItem()"
+      (clicked)="onDeleteItem(); $event.stopPropagation()"
       >Delete</app-button
     >
   }
