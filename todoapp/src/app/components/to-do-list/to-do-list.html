@@ -1,22 +1,39 @@
 <div class="todo-app">
   <h1>TODO Application</h1>
 
+  <div class="filter-todo-section">
+    <label class="filter-label" for="statusFilter"
+      >Select TODO items with status:</label
+    >
+    <select
+      id="statusFilter"
+      name="statusFilter"
+      (change)="onItemStatusFilterChanged($event)"
+    >
+      <option selected value="null">All items</option>
+      <option value="InProgress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
+
   <div class="main-content">
     <!-- Todo List Section -->
     <div class="todo-list-section">
       <h2>Todo Items</h2>
       @if (isLoading) {
-        <div class="spinner-text">Loading todo items...</div>
-        <mat-spinner class="loading-items-spinner" diameter="40" />
+        <app-loading-spinner> Loading todo items... </app-loading-spinner>
       } @else {
         <ul class="todo-list" id="todoList">
           @for (item of allItems(); track item.id) {
             <app-to-do-list-item
               appTooltip="{{ item.description }}"
               [id]="item.id"
+              [index]="$index + 1"
+              [isCompleted]="item.status === 'Completed'"
               [isEditing]="item.isEditing"
               [isSelected]="item.id === selectedItemId"
               [text]="item.text"
+              (itemChecked)="onCheckedItem(item.id, $event)"
               (itemDeleted)="onDeleteItem($event)"
               (itemEdited)="onItemEdited($event)"
               (itemSelected)="onSelectItem($event)"
@@ -42,36 +59,5 @@
     </div>
   </div>
 
-  <!-- Add New Todo Section -->
-  <div class="add-todo-section">
-    <h2>Add New Todo</h2>
-    <div class="input-group">
-      <input
-        #newItemText
-        class="todo-input"
-        id="newItemText"
-        matInput
-        placeholder="Enter a todo text"
-        type="text"
-      />
-    </div>
-    <div class="input-group">
-      <textarea
-        #newItemDescription
-        class="todo-textarea"
-        id="newItemDescription"
-        matInput
-        placeholder="Enter a todo description"
-      ></textarea>
-    </div>
-    <app-button
-      #addItemButton
-      appTooltip="Add a new item"
-      id="addItemButton"
-      title="Add new todo item"
-      type="add"
-      [isEnabled]="isAddButtonEnabled()"
-      (clicked)="onAddItem()"
-    />
-  </div>
+  <app-add-to-do-item (itemAdded)="onAddItem($event)" />
 </div>

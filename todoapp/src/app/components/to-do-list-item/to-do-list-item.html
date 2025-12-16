@@ -3,6 +3,13 @@
   (click)="onSelectItem(id())"
   (dblclick)="$event.stopPropagation(); onDoubleClick()"
 >
+  <input
+    type="checkbox"
+    name="isCompleted"
+    [checked]="isCompleted()"
+    (change)="$event.stopPropagation(); onCheckboxChange($event)"
+    (click)="$event.stopPropagation()"
+  />
   @if (isEditing()) {
     <input
       #editInput
@@ -26,12 +33,12 @@
       </button>
     </div>
   } @else {
-    <span class="todo-text">{{ id() }}. {{ text() }}</span
+    <span class="todo-text">{{ index() }}. {{ text() }}</span
     ><app-button
       appTooltip="Delete the item"
-      title="Delete"
       type="delete"
-      (clicked)="onDeleteItem()"
-    />
+      (clicked)="onDeleteItem(); $event.stopPropagation()"
+      >Delete</app-button
+    >
   }
 </li>

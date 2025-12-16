@@ -1,3 +1,7 @@
-<button type="button" [class]="getClasses()" (click)="onButtonClicked($event)">
-  {{ title() }}
+<button
+  [class]="getClasses()"
+  [type]="buttonHtmlType()"
+  (click)="onButtonClicked($event)"
+>
+  <ng-content />
 </button>
