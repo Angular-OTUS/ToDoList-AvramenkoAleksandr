@@ -13,14 +13,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-function* idSequence() {
-  let num = 0;
-  while (true) {
-    yield num;
-    num += 1;
-  }
-}
-
 @Component({
   selector: 'app-add-to-do-item',
   imports: [
@@ -39,18 +31,11 @@ function* idSequence() {
 export class AddToDoItem {
   private fb = inject(FormBuilder);
   readonly itemAdded = output<AddToDoItemDto>();
-  private idSeq = idSequence();
 
   addTodoForm: FormGroup;
 
   constructor() {
     this.addTodoForm = this.createForm();
-  }
-
-  private newItemId(): string {
-    const newIdValue = this.idSeq.next().value as number;
-    console.log('newIdValue: ', newIdValue);
-    return newIdValue.toString();
   }
 
   private createForm(): FormGroup {
