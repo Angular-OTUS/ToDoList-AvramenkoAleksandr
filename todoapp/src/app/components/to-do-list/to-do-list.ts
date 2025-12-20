@@ -3,10 +3,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  computed,
   inject,
   OnInit,
-  viewChild,
+  signal,
 } from '@angular/core';
 import { EditInfo, ToDoListItem } from '../to-do-list-item/to-do-list-item';
 import { FormsModule } from '@angular/forms';
@@ -15,12 +15,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AddToDoItemDto, ToDoItem } from '../../model/to-do-item';
+import { AddToDoItemDto } from '../../model/to-do-item';
 import { TooltipDirective } from '../../directives/tooltip-directive';
 import { ToastService } from '../../services/toast-service';
 import { LoadingSpinner } from '../loading-spinner/loading-spinner';
 import { AddToDoItem } from '../add-to-do-item/add-to-do-item';
 import { delay, first, tap } from 'rxjs';
+import { ToDoItemView } from "../to-do-item-view/to-do-item-view";
 
 @Component({
   selector: 'app-to-do-list',
@@ -35,7 +36,8 @@ import { delay, first, tap } from 'rxjs';
     MatProgressSpinnerModule,
     TooltipDirective,
     LoadingSpinner,
-  ],
+    ToDoItemView
+],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,11 +47,16 @@ export class ToDoList implements OnInit {
   private toastService: ToastService = inject(ToastService);
   private dataService: DataService = inject(DataService);
 
-  readonly currentItemDescriptionSignal = viewChild.required<
-    ElementRef<HTMLTextAreaElement>
-  >('currentItemDescription');
-
-  selectedItemId: string | null | undefined = null;
+  selectedItemId = signal<string | null>(null);
+  selectedItem = computed(() => {
+    const id = this.selectedItemId();
+    console.log('selectedItem id: ', id);
+    if (id) {
+      return this.dataService.getItem(id)
+    } else {
+      return null;
+    }
+  });
 
   isLoading: boolean = true;
 
@@ -114,23 +121,14 @@ export class ToDoList implements OnInit {
   }
 
   onSelectItem(selectedItemId: string): void {
-    const itemDescriptionTextArea =
-      this.currentItemDescriptionSignal().nativeElement;
-    const currentItem = this.dataService
-      .getDisplayedToDoItems()()
-      .find((item) => item.id === selectedItemId);
-    if (currentItem) {
-      if (this.selectedItemId !== selectedItemId) {
-        // another item is being selected - set it as current
-        this.selectedItemId = selectedItemId;
-        itemDescriptionTextArea.value = currentItem.description;
-      } else {
-        // the same item was clicked - just unselect it
-        this.selectedItemId = null;
-        itemDescriptionTextArea.value = '';
-      }
+    console.log('onSelectItem selectedItemId: ', selectedItemId);
+
+    if (this.selectedItemId() !== selectedItemId) {
+      // another item is being selected - set it as current
+      this.selectedItemId.set(selectedItemId);
     } else {
-      console.error('Item with id=', selectedItemId, ' not found');
+      // the same item was clicked - just unselect it
+      this.selectedItemId.set(null);
     }
   }
 

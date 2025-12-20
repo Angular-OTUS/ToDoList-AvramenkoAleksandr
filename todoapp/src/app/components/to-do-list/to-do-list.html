@@ -31,7 +31,7 @@
               [index]="$index + 1"
               [isCompleted]="item.status === 'Completed'"
               [isEditing]="item.isEditing"
-              [isSelected]="item.id === selectedItemId"
+              [isSelected]="item.id === selectedItemId()"
               [text]="item.text"
               (itemChecked)="onCheckedItem(item.id, $event)"
               (itemDeleted)="onDeleteItem($event)"
@@ -46,6 +46,19 @@
 
     <!-- Description Section -->
     <div class="description-section">
+      <app-to-do-item-view
+        [itemDescription]="selectedItem()?.description ?? ''"
+        [itemText]="selectedItem()?.text ?? ''"
+      />
+      <!-- <h2>Task</h2>
+      <div class="input-group">
+        <input
+          class="todo-text"
+          id="itemText"
+          matInput
+          type="text"
+        />
+      </div>
       <h2>Description</h2>
       <textarea
         #currentItemDescription
@@ -55,7 +68,7 @@
         placeholder="Select a todo item to view its description"
         readonly
       >
-      </textarea>
+      </textarea> -->
     </div>
   </div>
 
