@@ -22,6 +22,7 @@ import { LoadingSpinner } from '../loading-spinner/loading-spinner';
 import { AddToDoItem } from '../add-to-do-item/add-to-do-item';
 import { delay, first, tap } from 'rxjs';
 import { ToDoItemView } from "../to-do-item-view/to-do-item-view";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-to-do-list',
@@ -46,6 +47,7 @@ export class ToDoList implements OnInit {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private toastService: ToastService = inject(ToastService);
   private dataService: DataService = inject(DataService);
+  private readonly route = inject(ActivatedRoute);
 
   selectedItemId = signal<string | null>(null);
   selectedItem = computed(() => {
@@ -75,6 +77,10 @@ export class ToDoList implements OnInit {
         }),
       )
       .subscribe();
+
+    const id = this.route.snapshot.paramMap.get('id');
+    this.selectedItemId.set(id);
+    console.log('ToDoList: tasks route with id=', id);
   }
 
   onAddItem(newItem: AddToDoItemDto): void {

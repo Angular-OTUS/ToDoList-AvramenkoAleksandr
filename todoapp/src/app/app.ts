@@ -5,7 +5,7 @@ import { ToastComponent } from './components/toast-component/toast-component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToDoList, ToastComponent, RouterModule],
+  imports: [RouterOutlet, ToastComponent, RouterModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
