@@ -8,9 +8,8 @@ describe('ToDoItemView', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ToDoItemView]
-    })
-    .compileComponents();
+      imports: [ToDoItemView],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ToDoItemView);
     component = fixture.componentInstance;

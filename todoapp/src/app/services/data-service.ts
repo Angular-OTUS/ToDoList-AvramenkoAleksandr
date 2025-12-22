@@ -47,7 +47,7 @@ export class DataService {
   getItem(itemId: string): ToDoItem | undefined {
     const displayedItems = this.displayToDoItemList();
     if (displayedItems && displayedItems.length > 0) {
-      return displayedItems.find(item => item.id === itemId);
+      return displayedItems.find((item) => item.id === itemId);
     } else {
       return undefined;
     }

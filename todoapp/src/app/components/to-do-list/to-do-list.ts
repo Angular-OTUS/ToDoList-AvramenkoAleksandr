@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
+  effect,
   inject,
   OnInit,
   signal,
@@ -21,8 +22,7 @@ import { ToastService } from '../../services/toast-service';
 import { LoadingSpinner } from '../loading-spinner/loading-spinner';
 import { AddToDoItem } from '../add-to-do-item/add-to-do-item';
 import { delay, first, tap } from 'rxjs';
-import { ToDoItemView } from "../to-do-item-view/to-do-item-view";
-import { ActivatedRoute } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-to-do-list',
@@ -37,8 +37,8 @@ import { ActivatedRoute } from '@angular/router';
     MatProgressSpinnerModule,
     TooltipDirective,
     LoadingSpinner,
-    ToDoItemView
-],
+    RouterOutlet,
+  ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,20 +47,11 @@ export class ToDoList implements OnInit {
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private toastService: ToastService = inject(ToastService);
   private dataService: DataService = inject(DataService);
-  private readonly route = inject(ActivatedRoute);
-
-  selectedItemId = signal<string | null>(null);
-  selectedItem = computed(() => {
-    const id = this.selectedItemId();
-    console.log('selectedItem id: ', id);
-    if (id) {
-      return this.dataService.getItem(id)
-    } else {
-      return null;
-    }
-  });
+  private router = inject(Router);
 
   isLoading: boolean = true;
+  currentItemId = signal<string | null>(null);
+
 
   allItems = this.dataService.getDisplayedToDoItems();
 
@@ -77,10 +68,6 @@ export class ToDoList implements OnInit {
         }),
       )
       .subscribe();
-
-    const id = this.route.snapshot.paramMap.get('id');
-    this.selectedItemId.set(id);
-    console.log('ToDoList: tasks route with id=', id);
   }
 
   onAddItem(newItem: AddToDoItemDto): void {
@@ -98,7 +85,7 @@ export class ToDoList implements OnInit {
             itemList,
           );
           if (createdItem) {
-            this.onSelectItem(createdItem.id);
+            this.selectItem(createdItem.id);
             this.toastService.showToast('Todo item was added', 'success');
           } else {
             console.warn('No item was returned from server');
@@ -126,16 +113,14 @@ export class ToDoList implements OnInit {
     }
   }
 
+  selectItem(itemId: string): void {
+    console.log('selectItem: ', itemId);
+    this.router.navigate([itemId]);
+  }
+
   onSelectItem(selectedItemId: string): void {
     console.log('onSelectItem selectedItemId: ', selectedItemId);
-
-    if (this.selectedItemId() !== selectedItemId) {
-      // another item is being selected - set it as current
-      this.selectedItemId.set(selectedItemId);
-    } else {
-      // the same item was clicked - just unselect it
-      this.selectedItemId.set(null);
-    }
+    this.currentItemId.set(selectedItemId);
   }
 
   onCheckedItem(itemId: string, check: boolean): void {

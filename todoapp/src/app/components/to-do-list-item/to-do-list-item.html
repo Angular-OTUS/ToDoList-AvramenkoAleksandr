@@ -4,11 +4,10 @@
   (dblclick)="$event.stopPropagation(); onDoubleClick()"
 >
   <input
-    type="checkbox"
     name="isCompleted"
+    type="checkbox"
     [checked]="isCompleted()"
-    (change)="$event.stopPropagation(); onCheckboxChange($event)"
-    (click)="$event.stopPropagation()"
+    (change)="onCheckboxChange($event)"
   />
   @if (isEditing()) {
     <input
@@ -21,20 +20,22 @@
     />
     <div class="edit-actions">
       <button
-        type="button"
-        (click)="onSave()"
         class="save-btn"
+        type="button"
         [disabled]="!editText.trim()"
+        (click)="onSave()"
       >
         Save
       </button>
-      <button type="button" (click)="onCancel()" class="cancel-btn">
+      <button class="cancel-btn" type="button" (click)="onCancel()">
         Cancel
       </button>
     </div>
   } @else {
-    <span class="todo-text">{{ index() }}. {{ text() }}</span
-    ><app-button
+    <a [routerLink]="[id()]">
+      <span class="todo-text">{{ index() }}. {{ text() }}</span>
+    </a>
+    <app-button
       appTooltip="Delete the item"
       type="delete"
       (clicked)="onDeleteItem(); $event.stopPropagation()"

@@ -31,7 +31,7 @@
               [index]="$index + 1"
               [isCompleted]="item.status === 'Completed'"
               [isEditing]="item.isEditing"
-              [isSelected]="item.id === selectedItemId()"
+              [isSelected]="item.id === currentItemId()"
               [text]="item.text"
               (itemChecked)="onCheckedItem(item.id, $event)"
               (itemDeleted)="onDeleteItem($event)"
@@ -46,10 +46,7 @@
 
     <!-- Description Section -->
     <div class="description-section">
-      <app-to-do-item-view
-        [itemDescription]="selectedItem()?.description ?? ''"
-        [itemText]="selectedItem()?.text ?? ''"
-      />
+      <router-outlet />
     </div>
   </div>
 
