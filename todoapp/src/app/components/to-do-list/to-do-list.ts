@@ -3,8 +3,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
-  effect,
   inject,
   OnInit,
   signal,
@@ -51,8 +49,6 @@ export class ToDoList implements OnInit {
 
   isLoading: boolean = true;
   currentItemId = signal<string | null>(null);
-
-
   allItems = this.dataService.getDisplayedToDoItems();
 
   ngOnInit(): void {
@@ -85,7 +81,7 @@ export class ToDoList implements OnInit {
             itemList,
           );
           if (createdItem) {
-            this.selectItem(createdItem.id);
+            this.onSelectItem(createdItem.id);
             this.toastService.showToast('Todo item was added', 'success');
           } else {
             console.warn('No item was returned from server');
