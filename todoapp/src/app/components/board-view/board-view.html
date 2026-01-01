@@ -1,0 +1,57 @@
+<div class="board-container">
+      <div class="board-header">
+        <h2>Task Board</h2>
+        <button class="add-task-btn" (click)="createNewTask()">+ New Task</button>
+      </div>
+
+      <div cdkDropListGroup class="board-content">
+        <div class="task-board">
+          @for (column of columns(); track column.id) {
+            <div class="task-column" [class]="column.id + '-column'">
+              <div class="column-header">
+                <div class="column-title">
+                  <span>{{ column.title }}</span>
+                  <div class="column-badge">{{ column.tasks.length }}</div>
+                </div>
+                <button class="add-task-btn" (click)="addTaskToColumn(column.id)">+</button>
+              </div>
+
+              <div
+                class="tasks-container"
+                cdkDropList
+                [cdkDropListData]="column.tasks"
+                [cdkDropListConnectedTo]="getConnectedLists()"
+                (cdkDropListDropped)="drop($event, column.id)"
+              >
+                @for (task of column.tasks; track task.id) {
+                  <div class="task-card" cdkDrag [cdkDragData]="task" [class]="task.priority">
+                    <div class="task-header">
+                      <div class="task-title">{{ task.title }}</div>
+                    </div>
+                    <div class="task-description">{{ task.description }}</div>
+                    <div class="task-footer">
+                      <div class="task-assignee">
+                        <div class="assignee-avatar">{{ task.assigneeAvatar }}</div>
+                        <span>{{ task.assignee }}</span>
+                      </div>
+                      @if (task.dueDate) {
+                        <div class="task-due-date">
+                          <span>📅</span>
+                          <span [class]="getDueDateClass(task.dueDate)">
+                            {{ task.dueDate | date:'MMM d' }}
+                          </span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="empty-state">
+                    <p>No tasks here</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>

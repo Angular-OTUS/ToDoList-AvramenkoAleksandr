@@ -1,0 +1,25 @@
+<aside class="sidebar">
+<div class="sidebar-header">
+  <h2>Task Manager</h2>
+</div>
+<nav class="sidebar-nav">
+  <ul>
+    <li>
+      <a
+        [class.active]="currentView === 'backlog'"
+        (click)="navigateTo('backlog')"
+      >
+        📋 Backlog
+      </a>
+    </li>
+    <li>
+      <a
+        [class.active]="currentView === 'board'"
+        (click)="navigateTo('board')"
+      >
+        📊 Board
+      </a>
+    </li>
+  </ul>
+</nav>
+</aside>
