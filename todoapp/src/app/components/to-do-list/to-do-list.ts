@@ -3,9 +3,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   inject,
   OnInit,
-  signal,
 } from '@angular/core';
 import { EditInfo, ToDoListItem } from '../to-do-list-item/to-do-list-item';
 import { FormsModule } from '@angular/forms';
@@ -19,8 +19,10 @@ import { TooltipDirective } from '../../directives/tooltip-directive';
 import { ToastService } from '../../services/toast-service';
 import { LoadingSpinner } from '../loading-spinner/loading-spinner';
 import { AddToDoItem } from '../add-to-do-item/add-to-do-item';
-import { delay, first, tap } from 'rxjs';
-import { Router, RouterOutlet } from '@angular/router';
+import { delay, first, map, tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ToDoItemView } from '../to-do-item-view/to-do-item-view';
 
 @Component({
   selector: 'app-to-do-list',
@@ -35,21 +37,36 @@ import { Router, RouterOutlet } from '@angular/router';
     MatProgressSpinnerModule,
     TooltipDirective,
     LoadingSpinner,
-    RouterOutlet,
+    ToDoItemView,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoList implements OnInit {
+  private readonly route = inject(ActivatedRoute);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private toastService: ToastService = inject(ToastService);
   private dataService: DataService = inject(DataService);
   private router = inject(Router);
 
   isLoading: boolean = true;
-  currentItemId = signal<string | null>(null);
   allItems = this.dataService.getDisplayedToDoItems();
+
+  readonly selectedItemId = toSignal(
+    this.route.paramMap.pipe(
+      map((paramMap) => paramMap.get('id')),
+      tap((id) => console.log('selectedItemId from URL: ', id)),
+    ),
+  );
+  readonly selectedItem = computed(() => {
+    const itemId = this.selectedItemId();
+    if (itemId) {
+      return this.dataService.getItem(itemId);
+    } else {
+      return null;
+    }
+  });
 
   ngOnInit(): void {
     this.dataService
@@ -81,7 +98,7 @@ export class ToDoList implements OnInit {
             itemList,
           );
           if (createdItem) {
-            this.onSelectItem(createdItem.id);
+            this.selectItem(createdItem.id);
             this.toastService.showToast('Todo item was added', 'success');
           } else {
             console.warn('No item was returned from server');
@@ -111,12 +128,7 @@ export class ToDoList implements OnInit {
 
   selectItem(itemId: string): void {
     console.log('selectItem: ', itemId);
-    this.router.navigate([itemId]);
-  }
-
-  onSelectItem(selectedItemId: string): void {
-    console.log('onSelectItem selectedItemId: ', selectedItemId);
-    this.currentItemId.set(selectedItemId);
+    this.router.navigate(['tasks', itemId]);
   }
 
   onCheckedItem(itemId: string, check: boolean): void {

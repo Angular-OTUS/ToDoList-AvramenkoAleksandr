@@ -6,13 +6,10 @@ export const routes: Routes = [
   {
     path: 'tasks',
     component: ToDoList,
-    title: 'TO DO List',
-    children: [
-      {
-        path: ':id',
-        component: ToDoItemView,
-      },
-    ],
+  },
+  {
+    path: 'tasks/:id',
+    component: ToDoList,
   },
   {
     path: '',

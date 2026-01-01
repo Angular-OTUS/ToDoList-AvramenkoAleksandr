@@ -1,15 +1,5 @@
-import {
-  Component,
-  computed,
-  inject,
-  input,
-  OnInit,
-  signal,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { DataService } from '../../services/data-service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map, tap } from 'rxjs';
+import { Component, computed, inject, input } from '@angular/core';
+import { ToDoItem, ToDoItemData } from '../../model/to-do-item';
 
 @Component({
   selector: 'app-to-do-item-view',
@@ -18,35 +8,11 @@ import { map, tap } from 'rxjs';
   styleUrl: './to-do-item-view.css',
 })
 export class ToDoItemView {
-  private dataService: DataService = inject(DataService);
-
-  private readonly route = inject(ActivatedRoute);
-  readonly selectedItemId = toSignal(
-    this.route.paramMap.pipe(map((paramMap) => paramMap.get('id'))),
-  );
-  readonly selectedItem = computed(() => {
-    const id = this.selectedItemId();
-    console.log('selectedItem id: ', id);
-    if (id) {
-      return this.dataService.getItem(id);
-    } else {
-      return null;
-    }
-  });
+  readonly item = input.required<ToDoItem | null | undefined>();
   readonly itemText = computed<string>(() => {
-    const item = this.selectedItem();
-    if (item) {
-      return item.text;
-    } else {
-      return '';
-    }
+    return this.item()?.text ?? '';
   });
   readonly itemDescription = computed<string>(() => {
-    const item = this.selectedItem();
-    if (item) {
-      return item.description;
-    } else {
-      return '';
-    }
+    return this.item()?.description ?? '';
   });
 }

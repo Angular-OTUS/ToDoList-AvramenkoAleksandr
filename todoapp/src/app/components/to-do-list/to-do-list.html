@@ -31,12 +31,12 @@
               [index]="$index + 1"
               [isCompleted]="item.status === 'Completed'"
               [isEditing]="item.isEditing"
-              [isSelected]="item.id === currentItemId()"
+              [isSelected]="item.id === this.selectedItemId()"
               [text]="item.text"
               (itemChecked)="onCheckedItem(item.id, $event)"
               (itemDeleted)="onDeleteItem($event)"
               (itemEdited)="onItemEdited($event)"
-              (itemSelected)="onSelectItem($event)"
+              (itemSelected)="selectItem($event)"
               (itemStartEditing)="onStartEditing($event)"
             />
           }
@@ -46,7 +46,7 @@
 
     <!-- Description Section -->
     <div class="description-section">
-      <router-outlet />
+      <app-to-do-item-view [item]="selectedItem()" />
     </div>
   </div>
 
