@@ -3,10 +3,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  computed,
   inject,
   OnInit,
-  viewChild,
 } from '@angular/core';
 import { EditInfo, ToDoListItem } from '../to-do-list-item/to-do-list-item';
 import { FormsModule } from '@angular/forms';
@@ -15,12 +14,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AddToDoItemDto, ToDoItem } from '../../model/to-do-item';
+import { AddToDoItemDto } from '../../model/to-do-item';
 import { TooltipDirective } from '../../directives/tooltip-directive';
 import { ToastService } from '../../services/toast-service';
 import { LoadingSpinner } from '../loading-spinner/loading-spinner';
 import { AddToDoItem } from '../add-to-do-item/add-to-do-item';
-import { delay, first, tap } from 'rxjs';
+import { delay, first, map, tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ToDoItemView } from '../to-do-item-view/to-do-item-view';
 
 @Component({
   selector: 'app-to-do-list',
@@ -35,25 +37,36 @@ import { delay, first, tap } from 'rxjs';
     MatProgressSpinnerModule,
     TooltipDirective,
     LoadingSpinner,
+    ToDoItemView,
   ],
   templateUrl: './to-do-list.html',
   styleUrl: './to-do-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToDoList implements OnInit {
+  private readonly route = inject(ActivatedRoute);
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private toastService: ToastService = inject(ToastService);
   private dataService: DataService = inject(DataService);
-
-  readonly currentItemDescriptionSignal = viewChild.required<
-    ElementRef<HTMLTextAreaElement>
-  >('currentItemDescription');
-
-  selectedItemId: string | null | undefined = null;
+  private router = inject(Router);
 
   isLoading: boolean = true;
-
   allItems = this.dataService.getDisplayedToDoItems();
+
+  readonly selectedItemId = toSignal(
+    this.route.paramMap.pipe(
+      map((paramMap) => paramMap.get('id')),
+      tap((id) => console.log('selectedItemId from URL: ', id)),
+    ),
+  );
+  readonly selectedItem = computed(() => {
+    const itemId = this.selectedItemId();
+    if (itemId) {
+      return this.dataService.getItem(itemId);
+    } else {
+      return null;
+    }
+  });
 
   ngOnInit(): void {
     this.dataService
@@ -85,7 +98,7 @@ export class ToDoList implements OnInit {
             itemList,
           );
           if (createdItem) {
-            this.onSelectItem(createdItem.id);
+            this.selectItem(createdItem.id);
             this.toastService.showToast('Todo item was added', 'success');
           } else {
             console.warn('No item was returned from server');
@@ -113,25 +126,9 @@ export class ToDoList implements OnInit {
     }
   }
 
-  onSelectItem(selectedItemId: string): void {
-    const itemDescriptionTextArea =
-      this.currentItemDescriptionSignal().nativeElement;
-    const currentItem = this.dataService
-      .getDisplayedToDoItems()()
-      .find((item) => item.id === selectedItemId);
-    if (currentItem) {
-      if (this.selectedItemId !== selectedItemId) {
-        // another item is being selected - set it as current
-        this.selectedItemId = selectedItemId;
-        itemDescriptionTextArea.value = currentItem.description;
-      } else {
-        // the same item was clicked - just unselect it
-        this.selectedItemId = null;
-        itemDescriptionTextArea.value = '';
-      }
-    } else {
-      console.error('Item with id=', selectedItemId, ' not found');
-    }
+  selectItem(itemId: string): void {
+    console.log('selectItem: ', itemId);
+    this.router.navigate(['tasks', itemId]);
   }
 
   onCheckedItem(itemId: string, check: boolean): void {

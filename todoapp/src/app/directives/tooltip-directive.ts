@@ -42,8 +42,6 @@ export class TooltipDirective implements OnDestroy {
 
   @HostListener('mouseenter')
   onMouseEnter(): void {
-    console.log('onMouseEnter()');
-
     if (this.appTooltip() && !this.tooltipElement) {
       if (this.tooltipDelay) {
         this.delayTimeout = setTimeout(() => {
@@ -57,7 +55,6 @@ export class TooltipDirective implements OnDestroy {
 
   @HostListener('mouseleave')
   onMouseLeave(): void {
-    console.log('onMouseLeave()');
     if (this.delayTimeout) {
       clearTimeout(this.delayTimeout);
     }
@@ -96,7 +93,6 @@ export class TooltipDirective implements OnDestroy {
       return;
     }
 
-    console.log('positionTooltip');
     const viewport = this.getViewportBoundaries();
     const hostRect = this.el.nativeElement.getBoundingClientRect();
     const tooltipRect = this.tooltipElement.getBoundingClientRect();
@@ -124,8 +120,6 @@ export class TooltipDirective implements OnDestroy {
       bestPosition,
       viewport,
     );
-    console.log('position: ', position);
-
     this.renderer.setStyle(this.tooltipElement, 'top', `${position.top}px`);
     this.renderer.setStyle(this.tooltipElement, 'left', `${position.left}px`);
   }

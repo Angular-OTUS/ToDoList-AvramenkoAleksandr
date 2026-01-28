@@ -8,4 +8,11 @@ export interface ToDoItem {
   status: ItemStatus;
 }
 
+export interface ToDoItemData {
+  id: string;
+  text: string;
+  description: string;
+  status: ItemStatus;
+}
+
 export type AddToDoItemDto = Omit<ToDoItem, 'id' | 'isEditing'>;

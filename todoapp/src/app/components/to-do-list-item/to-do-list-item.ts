@@ -8,6 +8,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Button } from '../button/button';
 import { TooltipDirective } from '../../directives/tooltip-directive';
+import { RouterLink, RouterModule } from '@angular/router';
 
 export interface EditInfo {
   itemId: string;
@@ -18,7 +19,7 @@ export interface EditInfo {
 
 @Component({
   selector: 'app-to-do-list-item',
-  imports: [Button, TooltipDirective, FormsModule],
+  imports: [Button, TooltipDirective, FormsModule, RouterLink, RouterModule],
   templateUrl: './to-do-list-item.html',
   styleUrl: './to-do-list-item.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,8 +43,8 @@ export class ToDoListItem {
   );
 
   editText: string = '';
-
   onSelectItem(selectedItemId: string): void {
+    console.log('onSelectItem: id=', this.id());
     this.itemSelected.emit(selectedItemId);
   }
 

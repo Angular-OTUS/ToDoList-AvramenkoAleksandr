@@ -31,12 +31,12 @@
               [index]="$index + 1"
               [isCompleted]="item.status === 'Completed'"
               [isEditing]="item.isEditing"
-              [isSelected]="item.id === selectedItemId"
+              [isSelected]="item.id === this.selectedItemId()"
               [text]="item.text"
               (itemChecked)="onCheckedItem(item.id, $event)"
               (itemDeleted)="onDeleteItem($event)"
               (itemEdited)="onItemEdited($event)"
-              (itemSelected)="onSelectItem($event)"
+              (itemSelected)="selectItem($event)"
               (itemStartEditing)="onStartEditing($event)"
             />
           }
@@ -46,16 +46,7 @@
 
     <!-- Description Section -->
     <div class="description-section">
-      <h2>Description</h2>
-      <textarea
-        #currentItemDescription
-        class="description-textarea"
-        id="todoDescription"
-        matInput
-        placeholder="Select a todo item to view its description"
-        readonly
-      >
-      </textarea>
+      <app-to-do-item-view [item]="selectedItem()" />
     </div>
   </div>
 

@@ -81,3 +81,12 @@
 .cancel-btn:hover {
   background-color: #5a6268;
 }
+
+li a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  color: black;
+  gap: 10px;
+}
